@@ -34,6 +34,32 @@
   </select><br><br>
 
   <button onclick="calculateEnergy()">Calculate</button>
+<section class="info">
+  <h2>How this calculator works</h2>
+  <p>
+    This calculator estimates maintenance energy requirements for large reptiles
+    (monitor lizards and snakes) using metabolic scaling principles commonly applied
+    in herpetology and zoo nutrition.
+  </p>
+
+  <ul>
+    <li>
+      <strong>Metabolic scaling:</strong>
+      Basal energy requirement is estimated using body mass raised to the power of 0.75
+      (BM<sup>0.75</sup>), reflecting allometric metabolic scaling in reptiles.
+    </li>
+    <li>
+      <strong>Temperature adjustment:</strong>
+      Energy demand is adjusted using a Q10-based temperature factor, assuming a Q10 of 2,
+      with 30 °C as the reference temperature.
+    </li>
+    <li>
+      <strong>Feeding conversion:</strong>
+      Weekly energy requirements are converted to estimated prey mass using average
+      metabolizable energy values for whole prey items.
+    </li>
+  </ul>
+</section>
 
   <h2 id="result"></h2>
 
@@ -41,3 +67,36 @@
 
 </body>
 </html>
+
+<section class="info">
+  <h2>References</h2>
+  <ul>
+    <li>Nagy, K. A. (2005). Field metabolic rate and body size. <em>Journal of Experimental Biology</em>.</li>
+    <li>Withers, P. C. (1992). <em>Comparative Animal Physiology</em>. Saunders College Publishing.</li>
+    <li>Secor, S. M. (2009). Specific dynamic action and digestive physiology in reptiles.</li>
+    <li>Fidgett, A. L., & Gardner, M. G. (2014). Nutrition and feeding of reptiles in captivity.</li>
+    <li>AZA Nutrition Advisory Group – Reptile Feeding Guidelines.</li>
+  </ul>
+</section>
+
+<section class="info disclaimer">
+  <h2>Disclaimer</h2>
+  <p>
+    This calculator provides <strong>estimates only</strong> and is intended for
+    educational and husbandry-planning purposes.
+    Individual energy requirements may vary based on age, sex, reproductive status,
+    health condition, activity level, and environmental parameters.
+  </p>
+  <p>
+    Always combine calculator outputs with body condition scoring, behavioral monitoring,
+    and professional veterinary or nutritional judgment.
+  </p>
+</section>
+
+<footer>
+  <p>
+    Reptile Energy Calculator v1.0<br>
+    Developed by Abdul Fattah<br>
+    Based on zoo nutrition and herpetological literature
+  </p>
+</footer>
