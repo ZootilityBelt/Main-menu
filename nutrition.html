@@ -1,0 +1,46 @@
+<nav>
+  <a href="index.html">Energy Calculator</a> |
+  <a href="nutrition.html">Nutrient Calculator</a>
+</nav>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Reptile Nutrient Calculator</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav>
+  <a href="index.html">Energy Calculator</a> |
+  <a href="nutrition.html">Nutrient Calculator</a>
+</nav>
+
+<h1>Nutrient Composition Calculator</h1>
+
+<label>Prey type:</label><br>
+<select id="prey">
+  <option value="rat">Whole rat</option>
+  <option value="mouse">Whole mouse</option>
+  <option value="chicken">Chicken meat</option>
+  <option value="fish">Whole fish</option>
+</select><br><br>
+
+<label>Amount fed (grams):</label><br>
+<input type="number" id="amount" step="1"><br><br>
+
+<button onclick="calculateNutrients()">Calculate</button>
+
+<div id="nutrientResults" style="display:none;">
+  <h2>Results</h2>
+  <p>Protein: <span id="protein"></span> g</p>
+  <p>Fat: <span id="fat"></span> g</p>
+  <p>Calcium: <span id="calcium"></span> mg</p>
+  <p>Phosphorus: <span id="phosphorus"></span> mg</p>
+  <p><strong>Ca:P ratio:</strong> <span id="cap"></span></p>
+</div>
+
+<script src="nutrition.js"></script>
+</body>
+</html>
