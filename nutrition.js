@@ -1,32 +1,49 @@
-function calculateNutrients() {
-  const prey = document.getElementById("prey").value;
-  const amount = parseFloat(document.getElementById("amount").value);
+function calculateNutrition() {
 
-  if (!amount || amount <= 0) {
-    alert("Please enter a valid amount.");
+  const prey = document.getElementById("prey").value;
+  const weekInputs = document.querySelectorAll(".weekIntake");
+
+  let totalIntake = 0;
+  weekInputs.forEach(input => {
+    totalIntake += Number(input.value) || 0;
+  });
+
+  if (totalIntake <= 0) {
+    alert("Please enter prey amounts for at least one week.");
     return;
   }
 
-  const data = {
-    rat:     { protein: 16, fat: 10, ca: 240, p: 200 },
-    mouse:   { protein: 18, fat: 8,  ca: 200, p: 180 },
-    chicken: { protein: 20, fat: 5,  ca: 12,  p: 180 },
-    fish:    { protein: 19, fat: 6,  ca: 20,  p: 220 }
+  // Approximate nutrient values per gram (whole prey, incl. bone)
+  const nutrientData = {
+    rat:     { protein: 0.18, fat: 0.15, calcium: 15, phosphorus: 20 },
+    chicken: { protein: 0.20, fat: 0.10, calcium: 12, phosphorus: 18 },
+    goat:    { protein: 0.22, fat: 0.08, calcium: 25, phosphorus: 20 },
+    deer:    { protein: 0.23, fat: 0.06, calcium: 28, phosphorus: 22 }
   };
 
-  const item = data[prey];
+  const n = nutrientData[prey];
 
-  const protein = item.protein * amount / 100;
-  const fat = item.fat * amount / 100;
-  const calcium = item.ca * amount / 100;
-  const phosphorus = item.p * amount / 100;
-  const cap = (calcium / phosphorus).toFixed(2);
+  const protein = totalIntake * n.protein;
+  const fat = totalIntake * n.fat;
+  const calcium = totalIntake * n.calcium;
+  const phosphorus = totalIntake * n.phosphorus;
+  const capRatio = calcium / phosphorus;
 
-  document.getElementById("protein").innerText = protein.toFixed(1);
-  document.getElementById("fat").innerText = fat.toFixed(1);
-  document.getElementById("calcium").innerText = calcium.toFixed(0);
-  document.getElementById("phosphorus").innerText = phosphorus.toFixed(0);
-  document.getElementById("cap").innerText = cap;
+  document.getElementById("protein").innerText = protein.toFixed(0) + " g";
+  document.getElementById("fat").innerText = fat.toFixed(0) + " g";
+  document.getElementById("calcium").innerText = calcium.toFixed(0) + " mg";
+  document.getElementById("phosphorus").innerText = phosphorus.toFixed(0) + " mg";
+  document.getElementById("capRatio").innerText = capRatio.toFixed(2) + " : 1";
 
-  document.getElementById("nutrientResults").style.display = "block";
+  let note;
+  if (capRatio < 1.2) {
+    note = "⚠️ Ca:P ratio is LOW — consider increasing bone or calcium-rich prey.";
+  } else if (capRatio > 2.5) {
+    note = "ℹ️ Ca:P ratio is HIGH — monitor mineral balance.";
+  } else {
+    note = "✅ Ca:P ratio is within recommended range for Komodo dragons.";
+  }
+
+  document.getElementById("capNote").innerText = note;
+  document.getElementById("resultsSection").style.display = "block";
 }
