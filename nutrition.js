@@ -1,87 +1,82 @@
 function calculateNutrition() {
 
-  const prey = document.getElementById("prey").value;
-  const weekInputs = document.querySelectorAll(".weekIntake");
+  /* ==============================
+     USER INPUT (weekly menu)
+     ============================== */
 
-  let totalIntake = 0;
-  weekInputs.forEach(input => {
-    totalIntake += Number(input.value) || 0;
+  let totalGrams = 0;
+
+  document.querySelectorAll(".weekIntake").forEach(input => {
+    totalGrams += parseFloat(input.value) || 0;
   });
 
-  if (totalIntake <= 0) {
-    alert("Please enter prey amounts for at least one week.");
+  if (totalGrams <= 0) {
+    alert("Please enter at least one weekly food amount.");
     return;
   }
 
-  // Average nutrient + energy values per gram of prey
-  const nutrientData = {
-    rat:     { protein: 0.18, fat: 0.15, calcium: 15, phosphorus: 20, energy: 2.5 },
-    chicken: { protein: 0.20, fat: 0.10, calcium: 12, phosphorus: 18, energy: 1.6 },
-    goat:    { protein: 0.22, fat: 0.08, calcium: 25, phosphorus: 20, energy: 2.0 },
-    deer:    { protein: 0.23, fat: 0.06, calcium: 28, phosphorus: 22, energy: 1.9 }
-  };
+  /* ==============================
+     NUTRIENT CONSTANTS
+     (whole-prey averages)
+     ============================== */
 
-  function applyPreset() {
-  const preset = document.getElementById("preset").value;
-  const inputs = document.querySelectorAll(".weekIntake");
+  const ENERGY_PER_GRAM = 2.0;      // kcal/g
+  const PROTEIN_PER_GRAM = 0.22;    // 22%
+  const FAT_PER_GRAM = 0.08;        // 8%
+  const CALCIUM_PER_GRAM = 6.25;    // mg/g
+  const PHOSPHORUS_PER_GRAM = 5.0;  // mg/g
 
-  let values = [0, 0, 0, 0];
+  /* ==============================
+     CALCULATIONS
+     ============================== */
 
-  if (preset === "juvenile") {
-    // Smaller but frequent feeding
-    values = [1500, 1500, 1500, 1500]; // 6 kg / month
-  }
+  const energyWeek = totalGrams * ENERGY_PER_GRAM;
+  const proteinWeek = totalGrams * PROTEIN_PER_GRAM;
+  const fatWeek = totalGrams * FAT_PER_GRAM;
+  const calciumWeek = totalGrams * CALCIUM_PER_GRAM;
+  const phosphorusWeek = totalGrams * PHOSPHORUS_PER_GRAM;
 
-  if (preset === "subadult") {
-    values = [3000, 0, 3000, 0]; // 6 kg / month, biweekly
-  }
+  const caPRatio = calciumWeek / phosphorusWeek;
 
-  if (preset === "adult") {
-    values = [4000, 0, 0, 4000]; // 8 kg / month, low frequency
-  }
+  /* ==============================
+     DISPLAY RESULTS
+     ============================== */
 
-  inputs.forEach((input, index) => {
-    input.value = values[index];
-  });
-}
-
-  
-  const n = nutrientData[prey];
-
-  const energyIntake = totalIntake * n.energy;
-  const protein = totalIntake * n.protein;
-  const fat = totalIntake * n.fat;
-  const calcium = totalIntake * n.calcium;
-  const phosphorus = totalIntake * n.phosphorus;
-  const capRatio = calcium / phosphorus;
-
-  document.getElementById("energyIntake").innerText =
-    energyIntake.toFixed(0) + " kcal/week";
+  document.getElementById("energy").innerText =
+    energyWeek.toFixed(0) + " kcal / week";
 
   document.getElementById("protein").innerText =
-    protein.toFixed(0) + " g";
+    proteinWeek.toFixed(0) + " g";
 
   document.getElementById("fat").innerText =
-    fat.toFixed(0) + " g";
+    fatWeek.toFixed(0) + " g";
 
   document.getElementById("calcium").innerText =
-    calcium.toFixed(0) + " mg";
+    calciumWeek.toFixed(0) + " mg";
 
   document.getElementById("phosphorus").innerText =
-    phosphorus.toFixed(0) + " mg";
+    phosphorusWeek.toFixed(0) + " mg";
 
   document.getElementById("capRatio").innerText =
-    capRatio.toFixed(2) + " : 1";
+    caPRatio.toFixed(2) + " : 1";
 
-  let note;
-  if (capRatio < 1.2) {
-    note = "⚠️ Ca:P ratio is LOW — consider more bone or calcium-rich prey.";
-  } else if (capRatio > 2.5) {
-    note = "ℹ️ Ca:P ratio is HIGH — usually safe but monitor mineral balance.";
-  } else {
+  /* ==============================
+     Ca:P EVALUATION
+     ============================== */
+
+  let note = "";
+
+  if (caPRatio >= 1.0 && caPRatio <= 2.0) {
     note = "✅ Ca:P ratio is within recommended range for Komodo dragons.";
+  } else {
+    note = "⚠️ Ca:P ratio is outside recommended range (target 1–2 : 1).";
   }
 
   document.getElementById("capNote").innerText = note;
-  document.getElementById("resultsSection").style.display = "block";
+
+  /* ==============================
+     SHOW TABLE
+     ============================== */
+
+  document.getElementById("nutrientTable").style.display = "table";
 }
