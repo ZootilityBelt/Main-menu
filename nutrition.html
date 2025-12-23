@@ -30,6 +30,19 @@
     <option value="deer">Deer meat (with bone)</option>
   </select><br><br>
 
+<label>Komodo Dragon Life Stage (Preset):</label><br>
+<select id="preset" onchange="applyPreset()">
+  <option value="">-- Select preset --</option>
+  <option value="juvenile">Juvenile</option>
+  <option value="subadult">Subadult</option>
+  <option value="adult">Adult</option>
+</select>
+
+<p style="font-size:0.9em;color:#555;">
+Presets auto-fill a typical 4-week feeding plan. You may adjust values afterward.
+</p>
+
+  
   <label>Weekly feeding plan (g prey per week):</label><br>
   <table>
     <thead>
