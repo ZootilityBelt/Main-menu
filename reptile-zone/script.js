@@ -77,6 +77,14 @@ function searchSpecies() {
         document.getElementById("zone").textContent = found.zone;
         document.getElementById("uvi").textContent = found.uvi;
 
+        // Apply zone-based color to the highlight result item
+        const zoneItem = document.querySelector(".result-item.highlight");
+        zoneItem.classList.remove("result-zone-1", "result-zone-2", "result-zone-3", "result-zone-4");
+        const zoneMatch = found.zone.match(/Zone (\d)/);
+        if (zoneMatch) {
+            zoneItem.classList.add("result-zone-" + zoneMatch[1]);
+        }
+
         resultBox.classList.add("show");
         notFound.classList.remove("show");
     } else {
