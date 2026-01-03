@@ -25,6 +25,9 @@ const defaultDailyItems = [
     'Climbing challenge'
 ];
 
+let weeklyExampleMode = true;
+let dailyExampleMode = true;
+
 function initializeItems() {
     const weeklyContainer = document.getElementById('weeklyItems');
     const dailyContainer = document.getElementById('dailyItems');
@@ -33,33 +36,64 @@ function initializeItems() {
     dailyContainer.innerHTML = '';
 
     defaultWeeklyItems.forEach(item => {
-        addWeeklyItem(item);
+        addWeeklyItem(item, true);
     });
 
     defaultDailyItems.forEach(item => {
-        addDailyItem(item);
+        addDailyItem(item, true);
     });
+
+    // Add the activate buttons
+    updateActivateButtons();
 }
 
-function addWeeklyItem(value = '') {
+function addWeeklyItem(value = '', isExample = false) {
     const container = document.getElementById('weeklyItems');
     const itemDiv = document.createElement('div');
     itemDiv.className = 'item-row';
+    if (isExample && weeklyExampleMode) {
+        itemDiv.classList.add('example-item');
+    }
     itemDiv.innerHTML = `
                 <input type="text" value="${value}" placeholder="Enter weekly enrichment item" class="weekly-input">
                 <button class="btn-remove" onclick="removeItem(this)">Remove</button>
             `;
+
+    // Add focus event to activate example on click
+    if (isExample && weeklyExampleMode) {
+        const input = itemDiv.querySelector('input');
+        input.addEventListener('focus', function () {
+            if (weeklyExampleMode) {
+                activateSingleWeeklyExample(this);
+            }
+        });
+    }
+
     container.appendChild(itemDiv);
 }
 
-function addDailyItem(value = '') {
+function addDailyItem(value = '', isExample = false) {
     const container = document.getElementById('dailyItems');
     const itemDiv = document.createElement('div');
     itemDiv.className = 'item-row';
+    if (isExample && dailyExampleMode) {
+        itemDiv.classList.add('example-item');
+    }
     itemDiv.innerHTML = `
                 <input type="text" value="${value}" placeholder="Enter daily enrichment item" class="daily-input">
                 <button class="btn-remove" onclick="removeItem(this)">Remove</button>
             `;
+
+    // Add focus event to activate example on click
+    if (isExample && dailyExampleMode) {
+        const input = itemDiv.querySelector('input');
+        input.addEventListener('focus', function () {
+            if (dailyExampleMode) {
+                activateSingleDailyExample(this);
+            }
+        });
+    }
+
     container.appendChild(itemDiv);
 }
 
@@ -181,7 +215,8 @@ function generateSchedule() {
     let dailyIndex = 0;
 
     while (currentDay <= daysInMonth) {
-        const weeklyItem = shuffledWeekly[currentWeek % shuffledWeekly.length];
+        // Randomly select a weekly item for each week
+        const weeklyItem = weeklyItems[Math.floor(Math.random() * weeklyItems.length)];
         window.scheduleData.weeklyUsage[weeklyItem] = (window.scheduleData.weeklyUsage[weeklyItem] || 0) + 1;
 
         output += `<div class="calendar-week">
@@ -204,7 +239,8 @@ function generateSchedule() {
         // Fill in the days
         const startDayOfWeek = currentWeek === 0 ? firstDay : 0;
         for (let i = startDayOfWeek; i < 7 && currentDay <= daysInMonth; i++) {
-            const dailyItem = shuffledDaily[dailyIndex % shuffledDaily.length];
+            // Randomly select a daily item for each day
+            const dailyItem = dailyItems[Math.floor(Math.random() * dailyItems.length)];
             window.scheduleData.dailyUsage[dailyItem] = (window.scheduleData.dailyUsage[dailyItem] || 0) + 1;
 
             const dayOfWeek = dayNames[i];
@@ -300,6 +336,74 @@ function generateOrderList() {
     document.getElementById('orderListSection').innerHTML = output;
     document.getElementById('orderListSection').classList.add('show');
     document.getElementById('orderListSection').scrollIntoView({ behavior: 'smooth' });
+}
+
+function updateActivateButtons() {
+    const weeklyContainer = document.getElementById('weeklyItems');
+    const dailyContainer = document.getElementById('dailyItems');
+
+    // Remove existing activate buttons
+    document.querySelectorAll('.btn-activate').forEach(btn => btn.remove());
+
+    // Add weekly activate button if in example mode
+    if (weeklyExampleMode) {
+        const weeklyBtn = document.createElement('button');
+        weeklyBtn.className = 'btn-activate';
+        weeklyBtn.textContent = '✓ Use These Examples';
+        weeklyBtn.onclick = activateWeeklyExamples;
+        weeklyContainer.parentElement.insertBefore(weeklyBtn, weeklyContainer);
+    }
+
+    // Add daily activate button if in example mode
+    if (dailyExampleMode) {
+        const dailyBtn = document.createElement('button');
+        dailyBtn.className = 'btn-activate';
+        dailyBtn.textContent = '✓ Use These Examples';
+        dailyBtn.onclick = activateDailyExamples;
+        dailyContainer.parentElement.insertBefore(dailyBtn, dailyContainer);
+    }
+}
+
+function activateSingleWeeklyExample(input) {
+    const row = input.closest('.item-row');
+    row.classList.remove('example-item');
+
+    // Check if all examples have been activated
+    const remainingExamples = document.querySelectorAll('#weeklyItems .example-item');
+    if (remainingExamples.length === 0) {
+        weeklyExampleMode = false;
+        updateActivateButtons();
+    }
+}
+
+function activateSingleDailyExample(input) {
+    const row = input.closest('.item-row');
+    row.classList.remove('example-item');
+
+    // Check if all examples have been activated
+    const remainingExamples = document.querySelectorAll('#dailyItems .example-item');
+    if (remainingExamples.length === 0) {
+        dailyExampleMode = false;
+        updateActivateButtons();
+    }
+}
+
+function activateWeeklyExamples() {
+    weeklyExampleMode = false;
+    const weeklyRows = document.querySelectorAll('#weeklyItems .item-row');
+
+    weeklyRows.forEach(row => row.classList.remove('example-item'));
+
+    updateActivateButtons();
+}
+
+function activateDailyExamples() {
+    dailyExampleMode = false;
+    const dailyRows = document.querySelectorAll('#dailyItems .item-row');
+
+    dailyRows.forEach(row => row.classList.remove('example-item'));
+
+    updateActivateButtons();
 }
 
 window.onload = initializeItems;

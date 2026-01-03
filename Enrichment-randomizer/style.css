@@ -189,6 +189,57 @@
             background: #218838;
         }
 
+        .btn-activate {
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(243, 156, 18, 0.3);
+        }
+
+        .btn-activate:hover {
+            background: linear-gradient(135deg, #e67e22 0%, #d35400 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(243, 156, 18, 0.4);
+        }
+
+        .example-item {
+            opacity: 0.6;
+            position: relative;
+        }
+
+        .example-item::before {
+            content: '📋 Example';
+            position: absolute;
+            top: -8px;
+            left: 10px;
+            background: #f39c12;
+            color: white;
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-weight: 600;
+            z-index: 1;
+        }
+
+        .example-item input {
+            background: #fef5e7;
+            border-color: #f39c12;
+            cursor: text;
+            transition: all 0.3s;
+        }
+
+        .example-item input:hover {
+            background: #fef9f0;
+            border-color: #e67e22;
+        }
+
         .btn-generate {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
@@ -470,31 +521,184 @@
         }
 
         @media print {
+            @page {
+                size: A4 landscape;
+                margin: 8mm 8mm;
+            }
+
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
             body {
                 background: white;
                 padding: 0;
+                margin: 0;
             }
 
             .container {
                 box-shadow: none;
-                padding: 20px;
+                padding: 0;
+                max-width: 100%;
+                margin: 0;
+            }
+
+            h1 {
+                font-size: 1.1em;
+                margin-bottom: 3px;
+                page-break-after: avoid;
+            }
+
+            .subtitle {
+                display: none;
             }
 
             .input-section,
             .btn-generate,
             .btn-print,
+            .btn-order-list,
             .navigation,
             footer {
-                display: none;
+                display: none !important;
             }
 
             .results {
                 display: block !important;
                 background: white;
+                padding: 0;
+                margin: 0;
+                max-height: 100vh;
+                overflow: hidden;
             }
 
+            .results h2 {
+                display: none;
+            }
+
+            /* Print header with institution info */
+            .header-info {
+                background: white;
+                border: 1px solid #667eea;
+                border-left: 4px solid #667eea;
+                padding: 4px 8px;
+                margin-bottom: 6px;
+                page-break-after: avoid;
+            }
+
+            .header-info .info-row {
+                margin: 1px 0;
+                font-size: 0.7em;
+                line-height: 1.2;
+            }
+
+            .header-info .info-label {
+                color: #667eea;
+                font-weight: 700;
+            }
+
+            /* Month title */
+            .results h3 {
+                font-size: 1em !important;
+                margin: 4px 0 6px 0 !important;
+                page-break-after: avoid;
+            }
+
+            /* Monthly events */
+            .monthly-events {
+                background: white;
+                border: 1px solid #ffc107;
+                border-left: 4px solid #ffc107;
+                padding: 3px 6px;
+                margin-bottom: 6px;
+                page-break-after: avoid;
+                font-size: 0.7em;
+            }
+
+            .order-list-section {
+                display: none !important;
+            }
+
+            /* Calendar weeks - compact layout */
             .calendar-week {
+                margin-bottom: 4px;
                 page-break-inside: avoid;
+                border: 1px solid #ddd;
+            }
+
+            .week-header {
+                background: #667eea;
+                color: white;
+                padding: 3px 6px;
+                font-size: 0.7em;
+                font-weight: 700;
+                page-break-after: avoid;
+            }
+
+            .weekly-focus {
+                background: #e7f3ff;
+                border-left: 3px solid #17a2b8;
+                padding: 2px 6px;
+                font-weight: 600;
+                font-size: 0.65em;
+                page-break-after: avoid;
+            }
+
+            .calendar-grid {
+                display: grid;
+                grid-template-columns: repeat(7, 1fr);
+                gap: 0;
+                background: white;
+                border: none;
+            }
+
+            .calendar-day-header {
+                background: #764ba2;
+                color: white;
+                padding: 2px 4px;
+                text-align: center;
+                font-weight: 600;
+                font-size: 0.6em;
+                border: 1px solid #ddd;
+            }
+
+            .calendar-day {
+                background: white;
+                padding: 3px;
+                min-height: 35px;
+                border: 1px solid #ddd;
+                page-break-inside: avoid;
+            }
+
+            .calendar-day.empty {
+                background: #f8f9fa;
+            }
+
+            .day-number {
+                font-weight: 700;
+                color: #667eea;
+                margin-bottom: 2px;
+                font-size: 0.65em;
+            }
+
+            .day-content {
+                font-size: 0.55em;
+                color: #333;
+                line-height: 1.2;
+                word-wrap: break-word;
+            }
+
+            /* Print footer */
+            .results::after {
+                content: "Enrichment Schedule - Generated by ZootilityBelt";
+                display: block;
+                text-align: center;
+                font-size: 0.6em;
+                color: #666;
+                margin-top: 6px;
+                padding-top: 4px;
+                border-top: 1px solid #ddd;
+                page-break-before: avoid;
             }
         }
 
