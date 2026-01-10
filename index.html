@@ -16,19 +16,15 @@
     <style>
         .menu-container {
             display: flex;
-            flex-direction: row;
             flex-wrap: wrap;
             justify-content: center;
-            align-items: stretch;
-            gap: 25px;
-            max-width: 1200px;
+            gap: 30px;
+            max-width: 1000px;
             margin: 40px auto;
             padding: 0 20px;
         }
 
         .menu-card {
-            flex: 1 1 0;
-            min-width: 0;
             background: linear-gradient(135deg, #2a2a4a 0%, #1a1a2e 100%);
             border: 3px solid #4a4a6a;
             border-radius: 15px;
@@ -42,6 +38,10 @@
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
+            flex: 0 0 calc(50% - 15px);
+            /* Force 2 columns minus gap */
+            max-width: 500px;
+            position: relative;
         }
 
         .menu-card:hover {
@@ -49,6 +49,7 @@
             border-color: #7a7aaa;
             box-shadow: 0 8px 25px rgba(100, 100, 200, 0.4);
             background: linear-gradient(135deg, #3a3a5a 0%, #2a2a3e 100%);
+            z-index: 2;
         }
 
         .menu-card h2 {
@@ -62,7 +63,7 @@
 
         .menu-card p {
             font-family: 'VT323', monospace;
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             color: #aaa;
             margin: 0;
             line-height: 1.4;
@@ -140,16 +141,36 @@
             text-shadow: 2px 2px 0px #000;
         }
 
-        /* Responsive Header */
-        @media (max-width: 768px) {
+        /* Responsive Header and Menu */
+        @media (max-width: 800px) {
             .menu-container {
-                flex-wrap: wrap;
                 gap: 20px;
+                padding: 0 15px;
             }
 
             .menu-card {
-                flex: 1 1 calc(50% - 10px);
-                min-width: 200px;
+                flex: 0 0 100%;
+                /* Force 1 column */
+                max-width: 100%;
+                flex-direction: row;
+                align-items: center;
+                text-align: left;
+                padding: 20px;
+            }
+
+            .menu-card .icon {
+                margin: 0 20px 0 0;
+                width: 70px;
+                height: 70px;
+            }
+
+            .menu-card h2 {
+                margin-bottom: 5px;
+                font-size: 0.8rem;
+            }
+
+            .menu-card p {
+                font-size: 1.1rem;
             }
 
             .pixel-header h1 {
@@ -167,17 +188,34 @@
         }
 
         @media (max-width: 480px) {
-            .pixel-header {
-                padding: 20px 15px;
-            }
-
             .pixel-header .header-content {
                 flex-direction: column;
                 gap: 15px;
             }
 
+            .menu-container {
+                max-width: 100%;
+            }
+
             .pixel-header h1 {
+                text-align: center;
                 font-size: 1rem;
+            }
+
+            .pixel-header .header-content {
+                flex-direction: column;
+                text-align: center;
+
+            }
+
+            .menu-card {
+                flex-direction: column;
+                text-align: center;
+                padding: 20px 15px;
+            }
+
+            .menu-card .icon {
+                margin: 0 auto 15px auto;
             }
 
             .pixel-header .header-icon {
@@ -229,6 +267,12 @@
                 <img src="randomizer.png" alt="Randomizer" class="icon">
                 <h2>Enrichment Randomizer</h2>
                 <p>Create randomized weekly and daily enrichment schedules for zoo animals.</p>
+            </a>
+
+            <a href="qba-scoring/index.html" class="menu-card">
+                <img src="qba.png" alt="QBA Scoring" class="icon" style="border-radius: 15px;">
+                <h2>QBA Scoring Tool</h2>
+                <p>Qualitative Behaviour Assessment for evaluating animal emotional expression.</p>
             </a>
         </div>
 

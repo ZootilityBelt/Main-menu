@@ -523,182 +523,242 @@
         @media print {
             @page {
                 size: A4 landscape;
-                margin: 8mm 8mm;
+                margin: 5mm;
             }
 
             * {
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
+                box-sizing: border-box !important;
             }
 
+            html,
             body {
-                background: white;
-                padding: 0;
+                width: 100%;
+                height: 100%;
                 margin: 0;
+                padding: 0;
+                background: white;
+                display: block !important;
+                /* Override flex */
             }
 
             .container {
-                box-shadow: none;
-                padding: 0;
+                width: 100%;
                 max-width: 100%;
                 margin: 0;
+                padding: 0;
+                box-shadow: none;
+                display: block !important;
             }
 
+            /* Compact Website Header */
             h1 {
-                font-size: 1.1em;
-                margin-bottom: 3px;
-                page-break-after: avoid;
+                display: flex !important;
+                justify-content: center;
+                align-items: center;
+                font-size: 14pt;
+                margin: 0 0 5px 0;
+                color: #667eea !important;
+                padding-top: 5px;
             }
 
-            .subtitle {
-                display: none;
+            .header-icon {
+                height: 20px;
+                width: auto;
+                margin-right: 8px;
             }
 
+            .subtitle,
             .input-section,
             .btn-generate,
             .btn-print,
             .btn-order-list,
-            .navigation,
-            footer {
+            .navigation {
                 display: none !important;
             }
 
+            /* Scale down results if needed */
             .results {
                 display: block !important;
                 background: white;
                 padding: 0;
                 margin: 0;
-                max-height: 100vh;
-                overflow: hidden;
+                width: 100%;
             }
 
             .results h2 {
                 display: none;
             }
 
-            /* Print header with institution info */
+            /* Compact Info Box */
             .header-info {
                 background: white;
                 border: 1px solid #667eea;
                 border-left: 4px solid #667eea;
-                padding: 4px 8px;
-                margin-bottom: 6px;
-                page-break-after: avoid;
+                padding: 2px 6px;
+                margin-bottom: 4px;
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+                justify-content: center;
             }
 
             .header-info .info-row {
-                margin: 1px 0;
-                font-size: 0.7em;
-                line-height: 1.2;
+                margin: 0;
+                font-size: 9pt;
+                line-height: normal;
             }
 
             .header-info .info-label {
-                color: #667eea;
                 font-weight: 700;
+                color: #667eea;
+                margin-right: 4px;
             }
 
-            /* Month title */
             .results h3 {
-                font-size: 1em !important;
-                margin: 4px 0 6px 0 !important;
-                page-break-after: avoid;
+                font-size: 12pt !important;
+                margin: 4px 0 !important;
+                text-align: center;
+                color: #333 !important;
             }
 
-            /* Monthly events */
             .monthly-events {
                 background: white;
                 border: 1px solid #ffc107;
                 border-left: 4px solid #ffc107;
-                padding: 3px 6px;
-                margin-bottom: 6px;
-                page-break-after: avoid;
-                font-size: 0.7em;
+                padding: 2px 6px;
+                margin-bottom: 5px;
+                font-size: 9pt;
             }
 
             .order-list-section {
                 display: none !important;
             }
 
-            /* Calendar weeks - compact layout */
+            /* Calendar Layout */
             .calendar-week {
-                margin-bottom: 4px;
+                margin-bottom: 3px;
+                border: 1px solid #ccc;
                 page-break-inside: avoid;
-                border: 1px solid #ddd;
             }
 
             .week-header {
                 background: #667eea;
                 color: white;
-                padding: 3px 6px;
-                font-size: 0.7em;
+                padding: 1px 4px;
+                font-size: 9pt;
                 font-weight: 700;
-                page-break-after: avoid;
+                display: inline-block;
+                width: auto;
+                border-bottom-right-radius: 4px;
             }
 
             .weekly-focus {
                 background: #e7f3ff;
-                border-left: 3px solid #17a2b8;
-                padding: 2px 6px;
+                border-left: none;
+                /* simple highlight */
+                padding: 1px 6px;
                 font-weight: 600;
-                font-size: 0.65em;
-                page-break-after: avoid;
+                font-size: 9pt;
+                display: inline-block;
+                background: transparent;
+                color: #333;
+            }
+
+            /* Make week header and focus one line if possible */
+            .calendar-week>div:first-child,
+            .calendar-week>div:nth-child(2) {
+                /* We can't easily merge them structurally without JS, 
+                    but we can style them to take less space. 
+                    Let's keep them stacked but very tight. */
+            }
+
+            .week-header {
+                display: block;
+                width: 100%;
+                border-radius: 0;
+                text-align: left;
+                background: #667eea;
+                color: white;
+                padding: 1px 5px;
+            }
+
+            .weekly-focus {
+                display: block;
+                background: #f0f7ff;
+                border-bottom: 1px solid #eee;
+                font-size: 8pt;
+                padding: 1px 5px;
+                color: #0056b3;
             }
 
             .calendar-grid {
                 display: grid;
                 grid-template-columns: repeat(7, 1fr);
-                gap: 0;
-                background: white;
-                border: none;
+                border-top: 1px solid #ccc;
             }
 
             .calendar-day-header {
-                background: #764ba2;
-                color: white;
-                padding: 2px 4px;
+                background: #f3f3f3;
+                color: #333;
+                padding: 1px;
                 text-align: center;
                 font-weight: 600;
-                font-size: 0.6em;
-                border: 1px solid #ddd;
+                font-size: 8pt;
+                border-right: 1px solid #eee;
+                border-bottom: 1px solid #eee;
             }
 
             .calendar-day {
-                background: white;
-                padding: 3px;
-                min-height: 35px;
-                border: 1px solid #ddd;
-                page-break-inside: avoid;
+                padding: 2px;
+                min-height: 25px;
+                /* Very small min-height */
+                border-right: 1px solid #eee;
+                font-size: 8pt;
+                line-height: 1.1;
+            }
+
+            .calendar-day:last-child {
+                border-right: none;
             }
 
             .calendar-day.empty {
-                background: #f8f9fa;
+                background: #fafafa;
             }
 
             .day-number {
                 font-weight: 700;
                 color: #667eea;
-                margin-bottom: 2px;
-                font-size: 0.65em;
+                font-size: 8pt;
+                float: left;
+                margin-right: 4px;
             }
 
             .day-content {
-                font-size: 0.55em;
-                color: #333;
-                line-height: 1.2;
-                word-wrap: break-word;
+                display: block;
+                overflow: hidden;
             }
 
-            /* Print footer */
-            .results::after {
-                content: "Enrichment Schedule - Generated by ZootilityBelt";
-                display: block;
+            /* Footer */
+            footer {
+                display: block !important;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                width: 100%;
                 text-align: center;
-                font-size: 0.6em;
-                color: #666;
-                margin-top: 6px;
-                padding-top: 4px;
-                border-top: 1px solid #ddd;
-                page-break-before: avoid;
+                padding: 4px;
+                background: white;
+                border-top: 1px solid #ccc;
+                font-size: 8pt;
+                color: #888;
+                margin: 0;
+            }
+
+            .results::after {
+                display: none;
+                /* Remove duplicate footer I added before */
             }
         }
 
