@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" id="htmlRoot">
 
 <head>
     <meta charset="UTF-8">
@@ -10,55 +10,79 @@
 
 <body>
     <div class="container">
-        <h1><img src="../randomizer.png" alt="Zoo Icon" class="header-icon"> Zoo Enrichment Program Randomizer</h1>
-        <p class="subtitle">Create randomized weekly and daily enrichment schedules for your animals</p>
+        <div class="language-toggle">
+            <button class="lang-btn active" onclick="setLanguage('en')" id="lang-en" title="English">🇬🇧</button>
+            <button class="lang-btn" onclick="setLanguage('id')" id="lang-id" title="Bahasa Indonesia">🇮🇩</button>
+        </div>
+        <h1><img src="../randomizer.png" alt="Zoo Icon" class="header-icon"> <span data-i18n="title">Zoo Enrichment
+                Program Randomizer</span></h1>
+        <p class="subtitle" data-i18n="subtitle">Create randomized weekly and daily enrichment schedules for your
+            animals</p>
 
         <div class="input-section">
             <div class="form-group">
-                <label for="institution">Zoo Institution (optional):</label>
-                <input type="text" id="institution" placeholder="e.g., Example Zoo">
+                <label for="institution" data-i18n="labelInstitution">Zoo Institution (optional):</label>
+                <input type="text" id="institution" placeholder="e.g., San Diego Zoo"
+                    data-i18n-placeholder="placeholderInstitution">
             </div>
 
             <div class="form-group">
-                <label for="area">Area/Enclosure (optional):</label>
-                <input type="text" id="area" placeholder="e.g., African Savanna, Primate Pavilion">
+                <label for="area" data-i18n="labelArea">Area/Enclosure (optional):</label>
+                <input type="text" id="area" placeholder="e.g., African Savanna, Primate Pavilion"
+                    data-i18n-placeholder="placeholderArea">
             </div>
 
             <div class="form-group">
-                <label for="month">Select Month and Year:</label>
+                <label for="zooLogo" data-i18n="labelLogo">Zoo Logo (optional):</label>
+                <div class="logo-upload-area">
+                    <input type="file" id="zooLogo" accept="image/*" onchange="handleLogoUpload(this)">
+                    <p class="logo-note" data-i18n="logoNote">📐 Recommended: PNG or JPG, max 200×200px for best print
+                        results</p>
+                    <div class="logo-preview" id="logoPreview" style="display:none;">
+                        <img id="logoPreviewImg" src="" alt="Logo preview">
+                        <button class="btn-remove-logo" onclick="removeLogo()" data-i18n="btnRemoveLogo">✕
+                            Remove</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="month" data-i18n="labelMonth">Select Month and Year:</label>
                 <input type="month" id="month" required>
             </div>
 
             <div class="form-group">
-                <label for="monthly">Monthly Enrichment Items (comma-separated):</label>
-                <textarea id="monthly"
-                    placeholder="e.g., Pool party, Seasonal decorations, Special feeding event"></textarea>
+                <label for="monthly" data-i18n="labelMonthly">Monthly Enrichment Items (comma-separated):</label>
+                <textarea id="monthly" placeholder="e.g., Pool party, Seasonal decorations, Special feeding event"
+                    data-i18n-placeholder="placeholderMonthly"></textarea>
             </div>
 
             <div class="form-group">
-                <label>Weekly Enrichment Items:</label>
-                <button class="btn-add" onclick="addWeeklyItem()">+ Add Item</button>
+                <label data-i18n="labelWeekly">Weekly Enrichment Items:</label>
+                <button class="btn-add" onclick="addWeeklyItem()" data-i18n="btnAddItem">+ Add Item</button>
                 <div class="items-section" id="weeklyItems"></div>
             </div>
 
             <div class="form-group">
-                <label>Daily Enrichment Items:</label>
-                <button class="btn-add" onclick="addDailyItem()">+ Add Item</button>
+                <label data-i18n="labelDaily">Daily Enrichment Items:</label>
+                <button class="btn-add" onclick="addDailyItem()" data-i18n="btnAddItemDaily">+ Add Item</button>
                 <div class="items-section" id="dailyItems"></div>
             </div>
         </div>
 
-        <button class="btn-generate" onclick="generateSchedule()">Generate Enrichment Schedule</button>
+        <button class="btn-generate" onclick="generateSchedule()" data-i18n="btnGenerate">Generate Enrichment
+            Schedule</button>
 
         <div class="results" id="results">
-            <h2>Enrichment Schedule</h2>
+            <h2 data-i18n="resultsTitle">Enrichment Schedule</h2>
             <div id="scheduleOutput"></div>
-            <button class="btn-print" onclick="window.print()">🖨️ Print/Save Schedule</button>
-            <button class="btn-order-list" onclick="generateOrderList()">📋 Generate Monthly Item Order List</button>
+            <button class="btn-print" onclick="window.print()" data-i18n="btnPrint">🖨️ Print/Save Schedule</button>
+            <button class="btn-order-list" onclick="generateOrderList()" data-i18n="btnOrderList">📋 Generate Monthly
+                Item Order List</button>
             <div class="order-list-section" id="orderListSection"></div>
         </div>
         <div class="navigation">
-            <a href="../index.html" class="btn-back">🏠 Back to Main Menu</a>
+            <a href="../index.html" class="btn-back" data-i18n="btnBack">🏠 Back to Main Menu</a>
         </div>
     </div>
 
