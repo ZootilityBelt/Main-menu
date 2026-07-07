@@ -1,30 +1,240 @@
-const defaultWeeklyItems = [
-    'Puzzle feeders',
-    'Scent trails',
-    'New toys rotation',
-    'Training sessions'
-];
+// ===== Language / i18n =====
+let currentLanguage = 'en';
 
-const defaultDailyItems = [
-    'Food scatter',
-    'Ice treats',
-    'Cardboard boxes',
-    'Paper bags',
-    'Hay bundle',
-    'Scent enrichment',
-    'Mirror time',
-    'Musical instruments',
-    'Bubble machine',
-    'New browse material',
-    'Paint activity',
-    'Sand pit exploration',
-    'Water spray',
-    'Hanging vegetables',
-    'Texture boards',
-    'Hidden treats',
-    'Climbing challenge'
-];
+const translations = {
+    en: {
+        title: 'Zoo Enrichment Program Randomizer',
+        subtitle: 'Create randomized weekly and daily enrichment schedules for your animals',
+        labelInstitution: 'Zoo Institution (optional):',
+        placeholderInstitution: 'e.g., San Diego Zoo',
+        labelArea: 'Area/Enclosure (optional):',
+        placeholderArea: 'e.g., African Savanna, Primate Pavilion',
+        labelMonth: 'Select Month and Year:',
+        labelMonthly: 'Monthly Enrichment Items (comma-separated):',
+        placeholderMonthly: 'e.g., Pool party, Seasonal decorations, Special feeding event',
+        labelWeekly: 'Weekly Enrichment Items:',
+        labelDaily: 'Daily Enrichment Items:',
+        btnAddItem: '+ Add Item',
+        btnAddItemDaily: '+ Add Item',
+        btnGenerate: 'Generate Enrichment Schedule',
+        resultsTitle: 'Enrichment Schedule',
+        btnPrint: '🖨️ Print/Save Schedule',
+        btnOrderList: '📋 Generate Monthly Item Order List',
+        btnBack: '🏠 Back to Main Menu',
+        btnRemove: 'Remove',
+        btnUseExamples: '✓ Use These Examples',
+        placeholderWeekly: 'Enter weekly enrichment item',
+        placeholderDaily: 'Enter daily enrichment item',
+        alertSelectMonth: 'Please select a month and year',
+        alertWeeklyEmpty: 'Please add at least one weekly enrichment item',
+        alertDailyEmpty: 'Please add at least one daily enrichment item',
+        alertGenerateFirst: 'Please generate a schedule first before creating the order list',
+        labelZooInstitution: 'Zoo Institution:',
+        labelAreaEnclosure: 'Area/Enclosure:',
+        monthlyEvents: 'Monthly Events:',
+        week: 'Week',
+        weeklyFocus: 'Weekly Focus:',
+        dayNames: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+        orderListTitle: 'Monthly Item Order List',
+        orderMonthly: 'Monthly Enrichment Items',
+        orderWeekly: 'Weekly Enrichment Items',
+        orderDaily: 'Daily Enrichment Items',
+        qty: 'Qty:',
+        weeks: 'weeks',
+        days: 'days',
+        locale: 'en-US',
+        labelLogo: 'Zoo Logo (optional):',
+        logoNote: '📐 Recommended: PNG or JPG, max 200×200px for best print results',
+        btnRemoveLogo: '✕ Remove',
+        exampleWeeklyItems: [
+            'Puzzle feeders',
+            'Scent trails',
+            'New toys rotation',
+            'Training sessions'
+        ],
+        exampleDailyItems: [
+            'Food scatter',
+            'Ice treats',
+            'Cardboard boxes',
+            'Paper bags',
+            'Hay bundle',
+            'Scent enrichment',
+            'Mirror time',
+            'Musical instruments',
+            'Bubble machine',
+            'New browse material',
+            'Paint activity',
+            'Sand pit exploration',
+            'Water spray',
+            'Hanging vegetables',
+            'Texture boards',
+            'Hidden treats',
+            'Climbing challenge'
+        ]
+    },
+    id: {
+        title: 'Pengacak Program Pengayaan Kebun Binatang',
+        subtitle: 'Buat jadwal pengayaan mingguan dan harian secara acak untuk hewan Anda',
+        labelInstitution: 'Institusi Kebun Binatang (opsional):',
+        placeholderInstitution: 'cth., Taman Safari Indonesia',
+        labelArea: 'Area/Kandang (opsional):',
+        placeholderArea: 'cth., Savana Afrika, Paviliun Primata',
+        labelMonth: 'Pilih Bulan dan Tahun:',
+        labelMonthly: 'Item Pengayaan Bulanan (pisahkan dengan koma):',
+        placeholderMonthly: 'cth., Pesta kolam, Dekorasi musiman, Acara makan khusus',
+        labelWeekly: 'Item Pengayaan Mingguan:',
+        labelDaily: 'Item Pengayaan Harian:',
+        btnAddItem: '+ Tambah Item',
+        btnAddItemDaily: '+ Tambah Item',
+        btnGenerate: 'Buat Jadwal Pengayaan',
+        resultsTitle: 'Jadwal Pengayaan',
+        btnPrint: '🖨️ Cetak/Simpan Jadwal',
+        btnOrderList: '📋 Buat Daftar Pesanan Item Bulanan',
+        btnBack: '🏠 Kembali ke Menu Utama',
+        btnRemove: 'Hapus',
+        btnUseExamples: '✓ Gunakan Contoh Ini',
+        placeholderWeekly: 'Masukkan item pengayaan mingguan',
+        placeholderDaily: 'Masukkan item pengayaan harian',
+        alertSelectMonth: 'Silakan pilih bulan dan tahun',
+        alertWeeklyEmpty: 'Silakan tambahkan setidaknya satu item pengayaan mingguan',
+        alertDailyEmpty: 'Silakan tambahkan setidaknya satu item pengayaan harian',
+        alertGenerateFirst: 'Silakan buat jadwal terlebih dahulu sebelum membuat daftar pesanan',
+        labelZooInstitution: 'Institusi Kebun Binatang:',
+        labelAreaEnclosure: 'Area/Kandang:',
+        monthlyEvents: 'Acara Bulanan:',
+        week: 'Minggu',
+        weeklyFocus: 'Fokus Mingguan:',
+        dayNames: ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'],
+        orderListTitle: 'Daftar Pesanan Item Bulanan',
+        orderMonthly: 'Item Pengayaan Bulanan',
+        orderWeekly: 'Item Pengayaan Mingguan',
+        orderDaily: 'Item Pengayaan Harian',
+        qty: 'Jml:',
+        weeks: 'minggu',
+        days: 'hari',
+        locale: 'id-ID',
+        labelLogo: 'Logo Kebun Binatang (opsional):',
+        logoNote: '📐 Disarankan: PNG atau JPG, maks 200×200px untuk hasil cetak terbaik',
+        btnRemoveLogo: '✕ Hapus',
+        exampleWeeklyItems: [
+            'Wadah pakan teka-teki',
+            'Jejak aroma',
+            'Rotasi mainan baru',
+            'Sesi pelatihan'
+        ],
+        exampleDailyItems: [
+            'Sebar makanan',
+            'Camilan es',
+            'Kotak kardus',
+            'Kantong kertas',
+            'Gulungan jerami',
+            'Pengayaan aroma',
+            'Waktu cermin',
+            'Alat musik',
+            'Mesin gelembung',
+            'Bahan rambanan baru',
+            'Aktivitas melukis',
+            'Eksplorasi bak pasir',
+            'Semprotan air',
+            'Sayuran gantung',
+            'Papan tekstur',
+            'Camilan tersembunyi',
+            'Tantangan memanjat'
+        ]
+    }
+};
 
+function t(key) {
+    return translations[currentLanguage][key] || translations['en'][key] || key;
+}
+
+function setLanguage(lang) {
+    currentLanguage = lang;
+
+    // Update html lang attribute
+    document.getElementById('htmlRoot').setAttribute('lang', lang);
+
+    // Update language buttons
+    document.getElementById('lang-en').classList.toggle('active', lang === 'en');
+    document.getElementById('lang-id').classList.toggle('active', lang === 'id');
+
+    // Update all data-i18n text elements
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (translations[lang][key]) {
+            el.textContent = translations[lang][key];
+        }
+    });
+
+    // Update all data-i18n-placeholder elements
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        const key = el.getAttribute('data-i18n-placeholder');
+        if (translations[lang][key]) {
+            el.placeholder = translations[lang][key];
+        }
+    });
+
+    // Update dynamically created elements
+    document.querySelectorAll('.btn-remove').forEach(btn => {
+        btn.textContent = t('btnRemove');
+    });
+    document.querySelectorAll('.weekly-input').forEach(input => {
+        input.placeholder = t('placeholderWeekly');
+    });
+    document.querySelectorAll('.daily-input').forEach(input => {
+        input.placeholder = t('placeholderDaily');
+    });
+    document.querySelectorAll('.btn-activate').forEach(btn => {
+        btn.textContent = t('btnUseExamples');
+    });
+
+    if (weeklyExampleMode) {
+        const weeklyInputs = document.querySelectorAll('#weeklyItems .example-item input');
+        const weeklyExamples = t('exampleWeeklyItems');
+        weeklyInputs.forEach((input, index) => {
+            if (weeklyExamples[index]) {
+                input.value = weeklyExamples[index];
+            }
+        });
+    }
+
+    if (dailyExampleMode) {
+        const dailyInputs = document.querySelectorAll('#dailyItems .example-item input');
+        const dailyExamples = t('exampleDailyItems');
+        dailyInputs.forEach((input, index) => {
+            if (dailyExamples[index]) {
+                input.value = dailyExamples[index];
+            }
+        });
+    }
+}
+
+// ===== Zoo Logo =====
+let zooLogoDataUrl = null;
+
+function handleLogoUpload(input) {
+    const file = input.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function (e) {
+        zooLogoDataUrl = e.target.result;
+        const preview = document.getElementById('logoPreview');
+        const previewImg = document.getElementById('logoPreviewImg');
+        previewImg.src = zooLogoDataUrl;
+        preview.style.display = 'flex';
+    };
+    reader.readAsDataURL(file);
+}
+
+function removeLogo() {
+    zooLogoDataUrl = null;
+    document.getElementById('zooLogo').value = '';
+    document.getElementById('logoPreview').style.display = 'none';
+    document.getElementById('logoPreviewImg').src = '';
+}
+
+// ===== Default example items =====
 let weeklyExampleMode = true;
 let dailyExampleMode = true;
 
@@ -35,11 +245,13 @@ function initializeItems() {
     weeklyContainer.innerHTML = '';
     dailyContainer.innerHTML = '';
 
-    defaultWeeklyItems.forEach(item => {
+    const weeklyExamples = t('exampleWeeklyItems');
+    weeklyExamples.forEach(item => {
         addWeeklyItem(item, true);
     });
 
-    defaultDailyItems.forEach(item => {
+    const dailyExamples = t('exampleDailyItems');
+    dailyExamples.forEach(item => {
         addDailyItem(item, true);
     });
 
@@ -55,8 +267,8 @@ function addWeeklyItem(value = '', isExample = false) {
         itemDiv.classList.add('example-item');
     }
     itemDiv.innerHTML = `
-                <input type="text" value="${value}" placeholder="Enter weekly enrichment item" class="weekly-input">
-                <button class="btn-remove" onclick="removeItem(this)">Remove</button>
+                <input type="text" value="${value}" placeholder="${t('placeholderWeekly')}" class="weekly-input">
+                <button class="btn-remove" onclick="removeItem(this)">${t('btnRemove')}</button>
             `;
 
     // Add focus event to activate example on click
@@ -80,8 +292,8 @@ function addDailyItem(value = '', isExample = false) {
         itemDiv.classList.add('example-item');
     }
     itemDiv.innerHTML = `
-                <input type="text" value="${value}" placeholder="Enter daily enrichment item" class="daily-input">
-                <button class="btn-remove" onclick="removeItem(this)">Remove</button>
+                <input type="text" value="${value}" placeholder="${t('placeholderDaily')}" class="daily-input">
+                <button class="btn-remove" onclick="removeItem(this)">${t('btnRemove')}</button>
             `;
 
     // Add focus event to activate example on click
@@ -135,7 +347,7 @@ function getFirstDayOfMonth(year, month) {
 function generateSchedule() {
     const monthInput = document.getElementById('month').value;
     if (!monthInput) {
-        alert('Please select a month and year');
+        alert(t('alertSelectMonth'));
         return;
     }
 
@@ -143,7 +355,7 @@ function generateSchedule() {
     const area = document.getElementById('area').value.trim();
 
     const [year, month] = monthInput.split('-').map(Number);
-    const monthName = new Date(year, month - 1).toLocaleString('default', { month: 'long', year: 'numeric' });
+    const monthName = new Date(year, month - 1).toLocaleString(t('locale'), { month: 'long', year: 'numeric' });
     const daysInMonth = getDaysInMonth(year, month - 1);
     const firstDay = getFirstDayOfMonth(year, month - 1);
 
@@ -156,12 +368,12 @@ function generateSchedule() {
     const dailyItems = getDailyItems();
 
     if (weeklyItems.length === 0) {
-        alert('Please add at least one weekly enrichment item');
+        alert(t('alertWeeklyEmpty'));
         return;
     }
 
     if (dailyItems.length === 0) {
-        alert('Please add at least one daily enrichment item');
+        alert(t('alertDailyEmpty'));
         return;
     }
 
@@ -188,15 +400,20 @@ function generateSchedule() {
 
     let output = '';
 
-    // Header with institution and area info
-    if (institution || area) {
+    // Logo + header with institution and area info
+    if (zooLogoDataUrl || institution || area) {
         output += '<div class="header-info">';
+        if (zooLogoDataUrl) {
+            output += `<div class="logo-print"><img src="${zooLogoDataUrl}" alt="Zoo Logo" class="schedule-logo"></div>`;
+        }
+        output += '<div class="header-info-text">';
         if (institution) {
-            output += `<div class="info-row"><span class="info-label">Zoo Institution:</span> ${institution}</div>`;
+            output += `<div class="info-row"><span class="info-label">${t('labelZooInstitution')}</span> ${institution}</div>`;
         }
         if (area) {
-            output += `<div class="info-row"><span class="info-label">Area/Enclosure:</span> ${area}</div>`;
+            output += `<div class="info-row"><span class="info-label">${t('labelAreaEnclosure')}</span> ${area}</div>`;
         }
+        output += '</div>';
         output += '</div>';
     }
 
@@ -204,67 +421,62 @@ function generateSchedule() {
 
     if (monthlyItems.length > 0) {
         output += `<div class="monthly-events">
-                    <strong>Monthly Events:</strong> ${monthlyItems.join(', ')}
+                    <strong>${t('monthlyEvents')}</strong> ${monthlyItems.join(', ')}
                 </div>`;
     }
 
-    const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const originalDayNames = t('dayNames');
+    // Shift day names so the first column matches the weekday of the 1st of the month
+    const shiftedDayNames = [...originalDayNames.slice(firstDay), ...originalDayNames.slice(0, firstDay)];
 
     let currentDay = 1;
     let currentWeek = 0;
     let dailyIndex = 0;
+
+    output += `<table class="calendar-table">`;
+    output += `<thead><tr>`;
+    shiftedDayNames.forEach(day => {
+        output += `<th>${day}</th>`;
+    });
+    output += `</tr></thead>`;
+    output += `<tbody>`;
 
     while (currentDay <= daysInMonth) {
         // Randomly select a weekly item for each week
         const weeklyItem = weeklyItems[Math.floor(Math.random() * weeklyItems.length)];
         window.scheduleData.weeklyUsage[weeklyItem] = (window.scheduleData.weeklyUsage[weeklyItem] || 0) + 1;
 
-        output += `<div class="calendar-week">
-                    <div class="week-header">Week ${currentWeek + 1}</div>
-                    <div class="weekly-focus">Weekly Focus: ${weeklyItem}</div>
-                    <div class="calendar-grid">`;
+        // Weekly Focus row spanning all 7 cols
+        output += `<tr class="weekly-focus-row">
+                    <td colspan="7">
+                        <strong>${t('week')} ${currentWeek + 1}:</strong> ${t('weeklyFocus')} ${weeklyItem}
+                    </td>
+                   </tr>`;
 
-        // Day headers
-        dayNames.forEach(day => {
-            output += `<div class="calendar-day-header">${day}</div>`;
-        });
-
-        // Empty cells before first day of month
-        if (currentWeek === 0) {
-            for (let i = 0; i < firstDay; i++) {
-                output += `<div class="calendar-day empty"></div>`;
-            }
-        }
+        output += `<tr class="calendar-days-row">`;
 
         // Fill in the days
-        const startDayOfWeek = currentWeek === 0 ? firstDay : 0;
-        for (let i = startDayOfWeek; i < 7 && currentDay <= daysInMonth; i++) {
-            // Randomly select a daily item for each day
-            const dailyItem = dailyItems[Math.floor(Math.random() * dailyItems.length)];
-            window.scheduleData.dailyUsage[dailyItem] = (window.scheduleData.dailyUsage[dailyItem] || 0) + 1;
+        for (let i = 0; i < 7; i++) {
+            if (currentDay <= daysInMonth) {
+                const dailyItem = dailyItems[Math.floor(Math.random() * dailyItems.length)];
+                window.scheduleData.dailyUsage[dailyItem] = (window.scheduleData.dailyUsage[dailyItem] || 0) + 1;
 
-            const dayOfWeek = dayNames[i];
-
-            output += `<div class="calendar-day" data-day="${dayOfWeek}">
-                        <div class="day-number">${currentDay}</div>
-                        <div class="day-content">${dailyItem}</div>
-                    </div>`;
-
-            dailyIndex++;
-            currentDay++;
-        }
-
-        // Empty cells after last day of month
-        if (currentDay > daysInMonth) {
-            const lastDayOfWeek = (firstDay + daysInMonth - 1) % 7;
-            for (let i = lastDayOfWeek + 1; i < 7; i++) {
-                output += `<div class="calendar-day empty"></div>`;
+                output += `<td class="calendar-day">
+                            <div class="day-number">${currentDay}</div>
+                            <div class="day-content">${dailyItem}</div>
+                        </td>`;
+                dailyIndex++;
+                currentDay++;
+            } else {
+                output += `<td class="calendar-day empty"></td>`;
             }
         }
 
-        output += `</div></div>`;
+        output += `</tr>`;
         currentWeek++;
     }
+
+    output += `</tbody></table>`;
 
     document.getElementById('scheduleOutput').innerHTML = output;
     document.getElementById('results').classList.add('show');
@@ -274,7 +486,7 @@ function generateSchedule() {
 
 function generateOrderList() {
     if (!window.scheduleData) {
-        alert('Please generate a schedule first before creating the order list');
+        alert(t('alertGenerateFirst'));
         return;
     }
 
@@ -282,18 +494,21 @@ function generateOrderList() {
     const institution = document.getElementById('institution').value.trim();
     const area = document.getElementById('area').value.trim();
     const [year, month] = monthInput.split('-').map(Number);
-    const monthName = new Date(year, month - 1).toLocaleString('default', { month: 'long', year: 'numeric' });
+    const monthName = new Date(year, month - 1).toLocaleString(t('locale'), { month: 'long', year: 'numeric' });
 
-    let output = '<h3>Monthly Item Order List</h3>';
+    let output = `<h3>${t('orderListTitle')}</h3>`;
 
     // Header info
-    if (institution || area) {
+    if (zooLogoDataUrl || institution || area) {
         output += '<div style="text-align: center; margin-bottom: 20px; padding: 15px; background: #e7f3ff; border-radius: 8px;">';
+        if (zooLogoDataUrl) {
+            output += `<div style="margin-bottom: 10px;"><img src="${zooLogoDataUrl}" alt="Zoo Logo" style="max-height: 60px; width: auto;"></div>`;
+        }
         if (institution) {
-            output += `<div><strong>Zoo Institution:</strong> ${institution}</div>`;
+            output += `<div><strong>${t('labelZooInstitution')}</strong> ${institution}</div>`;
         }
         if (area) {
-            output += `<div><strong>Area/Enclosure:</strong> ${area}</div>`;
+            output += `<div><strong>${t('labelAreaEnclosure')}</strong> ${area}</div>`;
         }
         output += `<div style="margin-top: 10px; font-size: 1.1em; color: #667eea;"><strong>${monthName}</strong></div>`;
         output += '</div>';
@@ -304,10 +519,10 @@ function generateOrderList() {
     // Monthly Items
     if (Object.keys(window.scheduleData.monthlyUsage).length > 0) {
         output += '<div class="order-category">';
-        output += '<h4>Monthly Enrichment Items</h4>';
+        output += `<h4>${t('orderMonthly')}</h4>`;
         output += '<ul>';
         for (const [item, count] of Object.entries(window.scheduleData.monthlyUsage)) {
-            output += `<li><span class="item-name">${item}</span><span class="item-quantity">Qty: ${count}</span></li>`;
+            output += `<li><span class="item-name">${item}</span><span class="item-quantity">${t('qty')} ${count}</span></li>`;
         }
         output += '</ul>';
         output += '</div>';
@@ -315,20 +530,20 @@ function generateOrderList() {
 
     // Weekly Items
     output += '<div class="order-category">';
-    output += '<h4>Weekly Enrichment Items</h4>';
+    output += `<h4>${t('orderWeekly')}</h4>`;
     output += '<ul>';
     for (const [item, count] of Object.entries(window.scheduleData.weeklyUsage)) {
-        output += `<li><span class="item-name">${item}</span><span class="item-quantity">Qty: ${count} weeks</span></li>`;
+        output += `<li><span class="item-name">${item}</span><span class="item-quantity">${t('qty')} ${count} ${t('weeks')}</span></li>`;
     }
     output += '</ul>';
     output += '</div>';
 
     // Daily Items
     output += '<div class="order-category">';
-    output += '<h4>Daily Enrichment Items</h4>';
+    output += `<h4>${t('orderDaily')}</h4>`;
     output += '<ul>';
     for (const [item, count] of Object.entries(window.scheduleData.dailyUsage)) {
-        output += `<li><span class="item-name">${item}</span><span class="item-quantity">Qty: ${count} days</span></li>`;
+        output += `<li><span class="item-name">${item}</span><span class="item-quantity">${t('qty')} ${count} ${t('days')}</span></li>`;
     }
     output += '</ul>';
     output += '</div>';
@@ -349,7 +564,7 @@ function updateActivateButtons() {
     if (weeklyExampleMode) {
         const weeklyBtn = document.createElement('button');
         weeklyBtn.className = 'btn-activate';
-        weeklyBtn.textContent = '✓ Use These Examples';
+        weeklyBtn.textContent = t('btnUseExamples');
         weeklyBtn.onclick = activateWeeklyExamples;
         weeklyContainer.parentElement.insertBefore(weeklyBtn, weeklyContainer);
     }
@@ -358,7 +573,7 @@ function updateActivateButtons() {
     if (dailyExampleMode) {
         const dailyBtn = document.createElement('button');
         dailyBtn.className = 'btn-activate';
-        dailyBtn.textContent = '✓ Use These Examples';
+        dailyBtn.textContent = t('btnUseExamples');
         dailyBtn.onclick = activateDailyExamples;
         dailyContainer.parentElement.insertBefore(dailyBtn, dailyContainer);
     }
