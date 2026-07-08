@@ -39,12 +39,14 @@ const translations = {
         moderateWelfare: "Moderate Welfare",
         welfareConcerns: "Welfare Concerns",
         interpretationTitle: "Interpretation",
-        positiveIndicators: "Positive Indicators Average",
-        negativeIndicators: "Negative Indicators Average",
-        downloadBtn: "📥 Download Results as JSON",
+        quadrantPC: "Positive Calm (PC) Average",
+        quadrantPA: "Positive Active (PA) Average",
+        quadrantNC: "Negative Calm (NC) Average",
+        quadrantNA: "Negative Active (NA) Average",
+        downloadBtn: "📥 Download Results as JPEG",
         scatterPlotTitle: "QBA Behavioural Expression Map",
-        scatterPlotXAxis: "PC1 (Valence: Negative ← → Positive)",
-        scatterPlotYAxis: "PC2 (Arousal: Low ← → High)",
+        scatterPlotXAxis: "Arousal: LOW (Calm) ← → HIGH (Energetic)",
+        scatterPlotYAxis: "Valence: Negative ← → Positive",
         legendPositive: "Positive Indicators",
         legendNegative: "Negative Indicators",
         legendNeutral: "Custom Indicators",
@@ -55,22 +57,46 @@ const translations = {
         confirmRemove: "Remove \"{{name}}\" indicator?",
         promptName: "Enter the name of the custom indicator:",
         promptDef: "Enter a brief definition for this indicator:",
-        relaxed: "Relaxed",
-        relaxedDef: "Loose posture, smooth and unforced movement",
-        alert: "Alert",
-        alertDef: "Attentive to surroundings without tension",
-        curious: "Curious",
-        curiousDef: "Actively exploring or investigating",
-        tense: "Tense",
-        tenseDef: "Rigid posture, abrupt or restrained movement",
-        fearful: "Fearful",
-        fearfulDef: "Avoidance, freezing, or withdrawal",
-        frustrated: "Frustrated",
-        frustratedDef: "Agitated, repetitive, or restless demeanour",
+        lively: "Lively",
+        livelyDef: "Full of life and energy; active and outgoing",
         playful: "Playful",
         playfulDef: "Energetic, bouncy, engaged in play behaviors",
+        sociable: "Sociable",
+        sociableDef: "Seeking companionship; friendly",
+        curious: "Curious",
+        curiousDef: "Actively exploring or investigating",
+        excited: "Excited",
+        excitedDef: "Very enthusiastic and eager",
+        contentWord: "Content",
+        contentWordDef: "In a state of peaceful happiness",
         calm: "Calm",
         calmDef: "Quiet, peaceful, settled demeanor",
+        comfortable: "Comfortable",
+        comfortableDef: "Physically relaxed and free from constraint",
+        atEase: "At ease",
+        atEaseDef: "Free from worry, pain, or constraint",
+        relaxed: "Relaxed",
+        relaxedDef: "Loose posture, smooth and unforced movement",
+        tense: "Tense",
+        tenseDef: "Rigid posture, abrupt or restrained movement",
+        wary: "Wary",
+        waryDef: "Feeling or showing caution about possible dangers or problems",
+        withdrawn: "Withdrawn",
+        withdrawnDef: "Not wanting to communicate with other individuals",
+        listless: "Listless",
+        listlessDef: "Lacking energy or enthusiasm",
+        indifferent: "Indifferent",
+        indifferentDef: "Having no particular interest or sympathy; unconcerned",
+        frustrated: "Frustrated",
+        frustratedDef: "Agitated, repetitive, or restless demeanour",
+        irritable: "Irritable",
+        irritableDef: "Having or showing a tendency to be easily annoyed or made angry",
+        agitated: "Agitated",
+        agitatedDef: "Feeling or appearing troubled or nervous",
+        anxious: "Anxious",
+        anxiousDef: "Experiencing worry, unease, or nervousness",
+        fearful: "Fearful",
+        fearfulDef: "Avoidance, freezing, or withdrawal",
         interpretationPositive: "The animal is displaying predominantly positive behavioral expressions. High scores in relaxed, alert, curious, playful, or calm behaviors with low negative indicators suggest good welfare status.",
         interpretationModerate: "The animal shows a mix of positive and negative behavioral expressions. Consider the context and monitor for any changes. Some level of tension or alertness may be appropriate depending on the situation.",
         interpretationConcerns: "The animal is showing concerning behavioral patterns with elevated negative indicators or low positive expressions. Further assessment and potential intervention may be warranted.",
@@ -123,12 +149,14 @@ const translations = {
         moderateWelfare: "Kesejahteraan Sedang",
         welfareConcerns: "Perhatian Kesejahteraan",
         interpretationTitle: "Interpretasi",
-        positiveIndicators: "Rata-rata Indikator Positif",
-        negativeIndicators: "Rata-rata Indikator Negatif",
-        downloadBtn: "📥 Unduh Hasil sebagai JSON",
+        quadrantPC: "Rata-rata Tenang Positif (PC)",
+        quadrantPA: "Rata-rata Aktif Positif (PA)",
+        quadrantNC: "Rata-rata Tenang Negatif (NC)",
+        quadrantNA: "Rata-rata Aktif Negatif (NA)",
+        downloadBtn: "📥 Unduh Hasil sebagai JPEG",
         scatterPlotTitle: "Peta Ekspresi Perilaku QBA",
-        scatterPlotXAxis: "PC1 (Valensi: Negatif ← → Positif)",
-        scatterPlotYAxis: "PC2 (Gairah: Rendah ← → Tinggi)",
+        scatterPlotXAxis: "Gairah: RENDAH (Tenang) ← → TINGGI (Energetik)",
+        scatterPlotYAxis: "Valensi: Negatif ← → Positif",
         legendPositive: "Indikator Positif",
         legendNegative: "Indikator Negatif",
         legendNeutral: "Indikator Kustom",
@@ -139,22 +167,46 @@ const translations = {
         confirmRemove: "Hapus indikator \"{{name}}\"?",
         promptName: "Masukkan nama indikator kustom:",
         promptDef: "Masukkan definisi singkat untuk indikator ini:",
-        relaxed: "Santai",
-        relaxedDef: "Postur longgar, gerakan halus dan tidak dipaksakan",
-        alert: "Waspada",
-        alertDef: "Perhatian terhadap lingkungan tanpa ketegangan",
-        curious: "Ingin Tahu",
-        curiousDef: "Aktif menjelajah atau menyelidiki",
-        tense: "Tegang",
-        tenseDef: "Postur kaku, gerakan tiba-tiba atau terkendali",
-        fearful: "Takut",
-        fearfulDef: "Penghindaran, membeku, atau menarik diri",
-        frustrated: "Frustrasi",
-        frustratedDef: "Gelisah, berulang, atau sikap tidak tenang",
+        lively: "Lincah",
+        livelyDef: "Penuh kehidupan dan energi; aktif dan ramah",
         playful: "Bermain",
         playfulDef: "Energik, lincah, terlibat dalam perilaku bermain",
+        sociable: "Ramah",
+        sociableDef: "Mencari teman; ramah",
+        curious: "Ingin Tahu",
+        curiousDef: "Aktif menjelajah atau menyelidiki",
+        excited: "Bersemangat",
+        excitedDef: "Sangat antusias dan bersemangat",
+        contentWord: "Puas",
+        contentWordDef: "Dalam keadaan bahagia yang damai",
         calm: "Tenang",
         calmDef: "Diam, damai, sikap yang stabil",
+        comfortable: "Nyaman",
+        comfortableDef: "Santai secara fisik dan bebas dari batasan",
+        atEase: "Tenteram",
+        atEaseDef: "Bebas dari kekhawatiran, rasa sakit, atau batasan",
+        relaxed: "Santai",
+        relaxedDef: "Postur longgar, gerakan halus dan tidak dipaksakan",
+        tense: "Tegang",
+        tenseDef: "Postur kaku, gerakan tiba-tiba atau terkendali",
+        wary: "Waspada",
+        waryDef: "Merasa atau menunjukkan kehati-hatian terhadap kemungkinan bahaya atau masalah",
+        withdrawn: "Menarik diri",
+        withdrawnDef: "Tidak ingin berkomunikasi dengan individu lain",
+        listless: "Lesu",
+        listlessDef: "Kurang energi atau antusiasme",
+        indifferent: "Acuh tak acuh",
+        indifferentDef: "Tidak memiliki minat atau simpati khusus; tidak peduli",
+        frustrated: "Frustrasi",
+        frustratedDef: "Gelisah, berulang, atau sikap tidak tenang",
+        irritable: "Mudah Marah",
+        irritableDef: "Memiliki atau menunjukkan kecenderungan mudah jengkel atau marah",
+        agitated: "Gelisah",
+        agitatedDef: "Merasa atau tampak bermasalah atau gugup",
+        anxious: "Cemas",
+        anxiousDef: "Mengalami kekhawatiran, kegelisahan, atau gugup",
+        fearful: "Takut",
+        fearfulDef: "Penghindaran, membeku, atau menarik diri",
         interpretationPositive: "Hewan menampilkan ekspresi perilaku yang mayoritas positif. Skor tinggi pada perilaku santai, waspada, ingin tahu, bermain, atau tenang dengan indikator negatif rendah menunjukkan status kesejahteraan yang baik.",
         interpretationModerate: "Hewan menunjukkan campuran ekspresi perilaku positif dan negatif. Pertimbangkan konteksnya dan pantau perubahan apa pun. Beberapa tingkat ketegangan atau kewaspadaan mungkin sesuai tergantung situasinya.",
         interpretationConcerns: "Hewan menunjukkan pola perilaku yang mengkhawatirkan dengan indikator negatif yang meningkat atau ekspresi positif yang rendah. Penilaian lebih lanjut dan potensi intervensi mungkin diperlukan.",
@@ -172,14 +224,26 @@ const translations = {
 };
 
 const descriptorList = [
-    { name: "Relaxed", def: "Loose posture, smooth and unforced movement", type: "default" },
-    { name: "Alert", def: "Attentive to surroundings without tension", type: "default" },
+    { name: "Lively", def: "Full of life and energy; active and outgoing", type: "default" },
+    { name: "Playful", def: "Energetic, bouncy, engaged in play behaviors", type: "default" },
+    { name: "Sociable", def: "Seeking companionship; friendly", type: "default" },
     { name: "Curious", def: "Actively exploring or investigating", type: "default" },
+    { name: "Excited", def: "Very enthusiastic and eager", type: "default" },
+    { name: "Content", def: "In a state of peaceful happiness", type: "default" },
+    { name: "Calm", def: "Quiet, peaceful, settled demeanor", type: "default" },
+    { name: "Comfortable", def: "Physically relaxed and free from constraint", type: "default" },
+    { name: "At ease", def: "Free from worry, pain, or constraint", type: "default" },
+    { name: "Relaxed", def: "Loose posture, smooth and unforced movement", type: "default" },
     { name: "Tense", def: "Rigid posture, abrupt or restrained movement", type: "default" },
-    { name: "Fearful", def: "Avoidance, freezing, or withdrawal", type: "default" },
+    { name: "Wary", def: "Feeling or showing caution about possible dangers or problems", type: "default" },
+    { name: "Withdrawn", def: "Not wanting to communicate with other individuals", type: "default" },
+    { name: "Listless", def: "Lacking energy or enthusiasm", type: "default" },
+    { name: "Indifferent", def: "Having no particular interest or sympathy; unconcerned", type: "default" },
     { name: "Frustrated", def: "Agitated, repetitive, or restless demeanour", type: "default" },
-    { name: "Playful", def: "Energik, bouncy, engaged in play behaviors", type: "default" },
-    { name: "Calm", def: "Quiet, peaceful, settled demeanor", type: "default" }
+    { name: "Irritable", def: "Having or showing a tendency to be easily annoyed or made angry", type: "default" },
+    { name: "Agitated", def: "Feeling or appearing troubled or nervous", type: "default" },
+    { name: "Anxious", def: "Experiencing worry, unease, or nervousness", type: "default" },
+    { name: "Fearful", def: "Avoidance, freezing, or withdrawal", type: "default" }
 ];
 
 let customIndicatorCounter = 0;
@@ -202,7 +266,7 @@ function updateUI() {
     const trans = translations[currentLanguage];
 
     // Update title and subtitle
-    document.querySelector('h1').innerHTML = trans.title;
+    document.getElementById('main-title').innerHTML = trans.title;
     document.querySelector('.subtitle').innerHTML = trans.subtitle;
 
     // Update labels
@@ -265,27 +329,51 @@ function updateUI() {
 
 function getDescriptorName(baseName) {
     const lowerName = baseName.toLowerCase();
-    if (lowerName === 'relaxed') return t('relaxed');
-    if (lowerName === 'alert') return t('alert');
-    if (lowerName === 'curious') return t('curious');
-    if (lowerName === 'tense') return t('tense');
-    if (lowerName === 'fearful') return t('fearful');
-    if (lowerName === 'frustrated') return t('frustrated');
+    if (lowerName === 'lively') return t('lively');
     if (lowerName === 'playful') return t('playful');
+    if (lowerName === 'sociable') return t('sociable');
+    if (lowerName === 'curious') return t('curious');
+    if (lowerName === 'excited') return t('excited');
+    if (lowerName === 'content') return t('contentWord');
     if (lowerName === 'calm') return t('calm');
+    if (lowerName === 'comfortable') return t('comfortable');
+    if (lowerName === 'at ease') return t('atEase');
+    if (lowerName === 'relaxed') return t('relaxed');
+    if (lowerName === 'tense') return t('tense');
+    if (lowerName === 'wary') return t('wary');
+    if (lowerName === 'withdrawn') return t('withdrawn');
+    if (lowerName === 'listless') return t('listless');
+    if (lowerName === 'indifferent') return t('indifferent');
+    if (lowerName === 'frustrated') return t('frustrated');
+    if (lowerName === 'irritable') return t('irritable');
+    if (lowerName === 'agitated') return t('agitated');
+    if (lowerName === 'anxious') return t('anxious');
+    if (lowerName === 'fearful') return t('fearful');
     return baseName;
 }
 
 function getDescriptorDef(baseName) {
     const lowerName = baseName.toLowerCase();
-    if (lowerName === 'relaxed') return t('relaxedDef');
-    if (lowerName === 'alert') return t('alertDef');
-    if (lowerName === 'curious') return t('curiousDef');
-    if (lowerName === 'tense') return t('tenseDef');
-    if (lowerName === 'fearful') return t('fearfulDef');
-    if (lowerName === 'frustrated') return t('frustratedDef');
+    if (lowerName === 'lively') return t('livelyDef');
     if (lowerName === 'playful') return t('playfulDef');
+    if (lowerName === 'sociable') return t('sociableDef');
+    if (lowerName === 'curious') return t('curiousDef');
+    if (lowerName === 'excited') return t('excitedDef');
+    if (lowerName === 'content') return t('contentWordDef');
     if (lowerName === 'calm') return t('calmDef');
+    if (lowerName === 'comfortable') return t('comfortableDef');
+    if (lowerName === 'at ease') return t('atEaseDef');
+    if (lowerName === 'relaxed') return t('relaxedDef');
+    if (lowerName === 'tense') return t('tenseDef');
+    if (lowerName === 'wary') return t('waryDef');
+    if (lowerName === 'withdrawn') return t('withdrawnDef');
+    if (lowerName === 'listless') return t('listlessDef');
+    if (lowerName === 'indifferent') return t('indifferentDef');
+    if (lowerName === 'frustrated') return t('frustratedDef');
+    if (lowerName === 'irritable') return t('irritableDef');
+    if (lowerName === 'agitated') return t('agitatedDef');
+    if (lowerName === 'anxious') return t('anxiousDef');
+    if (lowerName === 'fearful') return t('fearfulDef');
     return baseName;
 }
 
@@ -454,31 +542,30 @@ function submitQBA() {
 }
 
 function showResults(data) {
-    // Calculate positive and negative indicators
-    const positiveDescriptors = ['Relaxed', 'Alert', 'Curious', 'Playful', 'Calm'];
-    const negativeDescriptors = ['Tense', 'Fearful', 'Frustrated'];
+    // Calculate quadrant indicators
+    const descriptorsPC = ['Relaxed', 'At ease', 'Content', 'Comfortable', 'Calm'];
+    const descriptorsPA = ['Lively', 'Curious', 'Sociable', 'Playful', 'Excited'];
+    const descriptorsNC = ['Tense', 'Withdrawn', 'Wary', 'Indifferent', 'Listless'];
+    const descriptorsNA = ['Fearful', 'Irritable', 'Frustrated', 'Agitated', 'Anxious'];
 
-    let positiveScore = 0;
-    let negativeScore = 0;
-    let positiveCount = 0;
-    let negativeCount = 0;
+    const calculateAvg = (descList) => {
+        let score = 0, count = 0;
+        descList.forEach(d => {
+            if (data.scores[d] !== undefined) {
+                score += data.scores[d];
+                count++;
+            }
+        });
+        return count > 0 ? (score / count).toFixed(1) : 0;
+    };
 
-    positiveDescriptors.forEach(d => {
-        if (data.scores[d] !== undefined) {
-            positiveScore += data.scores[d];
-            positiveCount++;
-        }
-    });
-
-    negativeDescriptors.forEach(d => {
-        if (data.scores[d] !== undefined) {
-            negativeScore += data.scores[d];
-            negativeCount++;
-        }
-    });
-
-    const avgPositive = positiveCount > 0 ? (positiveScore / positiveCount).toFixed(1) : 0;
-    const avgNegative = negativeCount > 0 ? (negativeScore / negativeCount).toFixed(1) : 0;
+    const avgPC = calculateAvg(descriptorsPC);
+    const avgPA = calculateAvg(descriptorsPA);
+    const avgNC = calculateAvg(descriptorsNC);
+    const avgNA = calculateAvg(descriptorsNA);
+    
+    const avgPositive = ((parseFloat(avgPC) + parseFloat(avgPA)) / 2).toFixed(1);
+    const avgNegative = ((parseFloat(avgNC) + parseFloat(avgNA)) / 2).toFixed(1);
 
     // Calculate overall welfare score (0-100)
     const welfareScore = Math.round(((avgPositive * 10) + ((10 - avgNegative) * 10)) / 2);
@@ -546,8 +633,12 @@ function showResults(data) {
     resultsHTML += `
       <div class="interpretation-text">
         <h4>${t('interpretationTitle')}</h4>
-        <p><strong>${t('positiveIndicators')}:</strong> ${avgPositive}/10</p>
-        <p><strong>${t('negativeIndicators')}:</strong> ${avgNegative}/10</p>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+            <p><strong>${t('quadrantPC')}:</strong> ${avgPC}/10</p>
+            <p><strong>${t('quadrantPA')}:</strong> ${avgPA}/10</p>
+            <p><strong>${t('quadrantNC')}:</strong> ${avgNC}/10</p>
+            <p><strong>${t('quadrantNA')}:</strong> ${avgNA}/10</p>
+        </div>
         <p style="margin-top: 12px;">${detailedInterpretation}</p>
       </div>
     `;
@@ -617,14 +708,29 @@ function drawScatterPlot(data) {
     // Define indicator positions based on typical QBA PCA mapping
     // X-axis: Valence (negative to positive), Y-axis: Arousal (low to high)
     const indicatorPositions = {
-        'Relaxed': { x: 0.4, y: -0.3, type: 'positive' },
-        'Alert': { x: 0.7, y: 0.2, type: 'positive' },
-        'Curious': { x: 0.5, y: 0.4, type: 'positive' },
-        'Tense': { x: -0.4, y: 0.5, type: 'negative' },
-        'Fearful': { x: -0.6, y: 0.3, type: 'negative' },
-        'Frustrated': { x: -0.7, y: 0.5, type: 'negative' },
-        'Playful': { x: 0.6, y: 0.6, type: 'positive' },
-        'Calm': { x: 0.3, y: -0.7, type: 'positive' }
+        'Relaxed': { x: -0.7, y: 0.7, type: 'positive' },
+        'At ease': { x: -0.6, y: 0.6, type: 'positive' },
+        'Content': { x: -0.5, y: 0.5, type: 'positive' },
+        'Comfortable': { x: -0.3, y: 0.3, type: 'positive' },
+        'Calm': { x: -0.4, y: 0.4, type: 'positive' },
+        
+        'Lively': { x: 0.5, y: 0.6, type: 'positive' },
+        'Curious': { x: 0.6, y: 0.4, type: 'positive' },
+        'Sociable': { x: 0.4, y: 0.5, type: 'positive' },
+        'Playful': { x: 0.7, y: 0.7, type: 'positive' },
+        'Excited': { x: 0.8, y: 0.8, type: 'positive' },
+        
+        'Tense': { x: -0.5, y: -0.4, type: 'negative' },
+        'Withdrawn': { x: -0.4, y: -0.6, type: 'negative' },
+        'Wary': { x: -0.6, y: -0.5, type: 'negative' },
+        'Indifferent': { x: -0.2, y: -0.8, type: 'negative' },
+        'Listless': { x: -0.3, y: -0.7, type: 'negative' },
+        
+        'Fearful': { x: 0.9, y: -0.8, type: 'negative' },
+        'Irritable': { x: 0.6, y: -0.5, type: 'negative' },
+        'Frustrated': { x: 0.5, y: -0.4, type: 'negative' },
+        'Agitated': { x: 0.8, y: -0.7, type: 'negative' },
+        'Anxious': { x: 0.7, y: -0.6, type: 'negative' }
     };
 
     // Draw axes
@@ -759,19 +865,29 @@ window.addEventListener('resize', () => {
 });
 
 function downloadResults() {
-    const downloadData = {
-        ...window.currentQBAData,
-        results: window.currentQBAResults
-    };
+    const captureArea = document.getElementById('capture-area');
+    const downloadBtn = document.querySelector('.download-btn');
+    
+    // Hide download button temporarily
+    if (downloadBtn) downloadBtn.style.display = 'none';
 
-    const dataStr = JSON.stringify(downloadData, null, 2);
-    const dataBlob = new Blob([dataStr], { type: 'application/json' });
-    const url = URL.createObjectURL(dataBlob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `QBA_${window.currentQBAData.species}_${window.currentQBAData.animalId}_${new Date().toISOString().split('T')[0]}.json`;
-    link.click();
-    URL.revokeObjectURL(url);
+    html2canvas(captureArea, {
+        scale: 2,
+        backgroundColor: '#f8fafc'
+    }).then(canvas => {
+        // Show download button again
+        if (downloadBtn) downloadBtn.style.display = 'block';
+
+        const imgData = canvas.toDataURL('image/jpeg', 0.9);
+        const link = document.createElement('a');
+        link.download = `QBA_${window.currentQBAData.species}_${window.currentQBAData.animalId}_${new Date().toISOString().split('T')[0]}.jpeg`;
+        link.href = imgData;
+        link.click();
+    }).catch(err => {
+        console.error('Error generating JPEG:', err);
+        if (downloadBtn) downloadBtn.style.display = 'block';
+        alert('Failed to generate image. Please try again.');
+    });
 }
 
 function showQBAInfo() {

@@ -12,8 +12,12 @@
 
 
     <div class="language-toggle">
-        <button class="lang-btn active" onclick="setLanguage('en')" id="lang-en" title="English">🇬🇧</button>
-        <button class="lang-btn" onclick="setLanguage('id')" id="lang-id" title="Bahasa Indonesia">🇮🇩</button>
+        <button class="lang-btn active" onclick="setLanguage('en')" id="lang-en" title="English">
+            <img src="https://flagcdn.com/24x18/gb.png" alt="UK Flag" style="display: block; width: 24px; height: 18px; border-radius: 2px;">
+        </button>
+        <button class="lang-btn" onclick="setLanguage('id')" id="lang-id" title="Bahasa Indonesia">
+            <img src="https://flagcdn.com/24x18/id.png" alt="Indonesia Flag" style="display: block; width: 24px; height: 18px; border-radius: 2px;">
+        </button>
     </div>
 
     <div class="container">
@@ -21,7 +25,7 @@
             <h1 style="margin: 0;">
                 <img src="../qba.png" alt="QBA ICon"
                     style="height: 50px; width: 50px; vertical-align: middle; margin-right: 10px; border-radius: 15px;">
-                Qualitative Behaviour Assessment
+                <span id="main-title">Qualitative Behaviour Assessment</span>
             </h1>
             <button class="info-button" onclick="showQBAInfo()" title="What is QBA?"
                 style="border-radius: 50%; width: 36px; height: 36px; padding: 0; justify-content: center; margin: 0;">
@@ -85,9 +89,10 @@
             <button class="btn-primary" onclick="submitQBA()">Submit QBA Score</button>
         </div>
 
-        <div class="summary" id="summary"></div>
-
-        <div class="results" id="results"></div>
+        <div id="capture-area" style="background: #f8fafc; padding: 20px; border-radius: 12px;">
+            <div class="summary" id="summary"></div>
+            <div class="results" id="results"></div>
+        </div>
 
         <div class="note">
             ℹ️ QBA scores reflect overall behavioural expression, not specific behaviours. Consider the animal's body
@@ -141,6 +146,7 @@
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
     <script src="script.js"></script>
 </body>
 
