@@ -709,34 +709,64 @@ button {
     background: #5568d3;
 }
 
-.descriptor-type-badge {
-    display: inline-block;
-    padding: 2px 8px;
-    border-radius: 4px;
-    font-size: 0.7rem;
-    font-weight: 600;
-    margin-left: 8px;
-    text-transform: uppercase;
-}
-
-.badge-custom {
-    background: #fbbf24;
-    color: #78350f;
-}
-
-.remove-indicator {
-    background: #ef4444;
-    color: white;
+.edit-indicator-btn {
+    background: none;
     border: none;
-    padding: 4px 12px;
-    border-radius: 6px;
     cursor: pointer;
-    font-size: 0.8rem;
-    margin-left: 8px;
+    font-size: 0.85rem;
+    padding: 2px 4px;
+    border-radius: 4px;
+    opacity: 0.5;
+    transition: opacity 0.2s, background 0.2s;
 }
 
-.remove-indicator:hover {
-    background: #dc2626;
+.edit-indicator-btn:hover {
+    opacity: 1;
+    background: rgba(102, 126, 234, 0.1);
+}
+
+/* Quadrant results grid */
+.quadrant-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 16px 0;
+}
+
+.quadrant-card {
+    background: #f8fafc;
+    border-radius: 10px;
+    padding: 14px 16px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.quadrant-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.quadrant-dominant {
+    background: #f0fdf4;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.quadrant-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #4a5568;
+    margin-bottom: 4px;
+}
+
+.quadrant-avg {
+    font-size: 1.5rem;
+    font-weight: 800;
+}
+
+.quadrant-badge {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #10b981;
+    margin-top: 4px;
 }
 
 @media (max-width: 600px) {
@@ -771,6 +801,10 @@ button {
 
     .actions button {
         width: 100%;
+    }
+
+    .quadrant-grid {
+        grid-template-columns: 1fr;
     }
 }
 

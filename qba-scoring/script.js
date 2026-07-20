@@ -7,7 +7,10 @@ const translations = {
         observer: "Observer",
         species: "Species",
         individualId: "Individual / Group ID",
+        period: "Observation Period",
+        periodPlaceholder: "e.g., Morning, 09:00",
         duration: "Observation Duration (minutes)",
+        durationSuggestion: "Recommendation: 2 minutes",
         context: "Context",
         contextBaseline: "Baseline",
         contextFeeding: "Feeding",
@@ -19,7 +22,8 @@ const translations = {
         observerPlaceholder: "Enter observer name",
         speciesPlaceholder: "e.g., Lion, Elephant",
         idPlaceholder: "e.g., L-001",
-        durationPlaceholder: "e.g., 30",
+        alertPeriod: "Please enter the observation period.",
+        durationPlaceholder: "e.g., 2",
         addCustom: "➕ Add Custom Indicator",
         notes: "Observer Notes (optional)",
         notesPlaceholder: "Add any additional observations or context...",
@@ -34,22 +38,30 @@ const translations = {
         summaryTitle: "✅ Submission Summary",
         time: "Time",
         resultsTitle: "📊 Assessment Results",
-        welfareIndex: "Welfare Index (0-100)",
+        welfareState: "Dominant Welfare State",
         positiveWelfare: "Positive Welfare",
         moderateWelfare: "Moderate Welfare",
         welfareConcerns: "Welfare Concerns",
         interpretationTitle: "Interpretation",
-        quadrantPC: "Positive Calm (PC) Average",
-        quadrantPA: "Positive Active (PA) Average",
-        quadrantNC: "Negative Calm (NC) Average",
-        quadrantNA: "Negative Active (NA) Average",
+        quadrantPC: "Positive Calm (PC)",
+        quadrantPA: "Positive Active (PA)",
+        quadrantNC: "Negative Calm (NC)",
+        quadrantNA: "Negative Active (NA)",
+        dominantQuadrant: "Dominant Quadrant",
+        welfareResultPC: "The animal is predominantly in a Positive Calm state. It appears relaxed, comfortable, and at ease — indicating good welfare with low arousal.",
+        welfareResultPA: "The animal is predominantly in a Positive Active state. It appears lively, curious, and playful — indicating good welfare with high engagement.",
+        welfareResultNC: "The animal is predominantly in a Negative Calm state. It appears withdrawn, listless, or indifferent — suggesting low welfare with suppressed activity.",
+        welfareResultNA: "The animal is predominantly in a Negative Active state. It appears fearful, frustrated, or anxious — suggesting low welfare with heightened distress.",
+        welfareResultMixed: "The animal shows a mixed affective state with no single dominant quadrant. Further observation is recommended to clarify the welfare status.",
+        editIndicator: "Edit indicator name",
         downloadBtn: "📥 Download Results as JPEG",
         scatterPlotTitle: "QBA Behavioural Expression Map",
         scatterPlotXAxis: "Arousal: LOW (Calm) ← → HIGH (Energetic)",
         scatterPlotYAxis: "Valence: Negative ← → Positive",
-        legendPositive: "Positive Indicators",
-        legendNegative: "Negative Indicators",
-        legendNeutral: "Custom Indicators",
+        legendPC: "Positive Calm (PC)",
+        legendPA: "Positive Active (PA)",
+        legendNC: "Negative Calm (NC)",
+        legendNA: "Negative Active (NA)",
         alertFillFields: "Please fill in Observer, Species, and Individual/Group ID before submitting.",
         alertDuration: "Please enter a valid observation duration.",
         alertExists: "An indicator with this name already exists!",
@@ -113,140 +125,160 @@ const translations = {
     },
     id: {
         title: "🦁 Penilaian Perilaku Kualitatif",
-        subtitle: "Skala penilaian: <strong>0 (Tidak ada)</strong> hingga <strong>10 (Sangat terlihat)</strong>",
-        observer: "Pengamat",
+        subtitle: "Skala penilaian: <strong>0 (Tidak terlihat)</strong> hingga <strong>10 (Sangat jelas terlihat)</strong>",
+        observer: "Nama Pengamat",
         species: "Spesies",
         individualId: "ID Individu / Kelompok",
-        duration: "Durasi Pengamatan (menit)",
-        context: "Konteks",
-        contextBaseline: "Baseline",
-        contextFeeding: "Pemberian Makan",
-        contextEnrichment: "Pengayaan",
-        contextVisitor: "Kehadiran Pengunjung",
-        contextTraining: "Pelatihan",
-        contextVeterinary: "Veteriner",
+        period: "Periode Pengamatan",
+        periodPlaceholder: "mis., Pagi, 09:00",
+        duration: "Lama Pengamatan (menit)",
+        durationSuggestion: "Rekomendasi: 2 menit",
+        context: "Konteks Pengamatan",
+        contextBaseline: "Kondisi Normal",
+        contextFeeding: "Saat Pemberian Pakan",
+        contextEnrichment: "Saat Pengayaan Lingkungan",
+        contextVisitor: "Ada Pengunjung",
+        contextTraining: "Saat Pelatihan",
+        contextVeterinary: "Pemeriksaan Kesehatan",
         indicatorsTitle: "Indikator QBA",
-        observerPlaceholder: "Masukkan nama pengamat",
-        speciesPlaceholder: "mis., Singa, Gajah",
-        idPlaceholder: "mis., L-001",
-        durationPlaceholder: "mis., 30",
-        addCustom: "➕ Tambah Indikator Kustom",
-        notes: "Catatan Pengamat (opsional)",
-        notesPlaceholder: "Tambahkan pengamatan atau konteks tambahan...",
-        resetBtn: "Reset Formulir",
-        submitBtn: "Kirim Skor QBA",
-        infoNote: "ℹ️ Skor QBA mencerminkan ekspresi perilaku keseluruhan, bukan perilaku spesifik. Pertimbangkan bahasa tubuh, kualitas gerakan, dan sikap keseluruhan hewan.",
-        scaleAbsent: "0 - Tidak ada",
-        scaleModerate: "5 - Sedang",
-        scaleStrong: "10 - Kuat",
-        customBadge: "Kustom",
+        observerPlaceholder: "Ketik nama pengamat",
+        speciesPlaceholder: "contoh: Singa, Gajah",
+        idPlaceholder: "contoh: L-001",
+        alertPeriod: "Mohon masukkan periode pengamatan.",
+        durationPlaceholder: "contoh: 2",
+        addCustom: "➕ Tambah Indikator Baru",
+        notes: "Catatan Pengamat (tidak wajib)",
+        notesPlaceholder: "Tuliskan catatan atau informasi tambahan di sini...",
+        resetBtn: "Hapus Semua Isian",
+        submitBtn: "Kirim Penilaian QBA",
+        infoNote: "ℹ️ Skor QBA menggambarkan ekspresi perilaku secara keseluruhan, bukan perilaku tertentu. Perhatikan bahasa tubuh, cara bergerak, dan kesan umum dari hewan yang diamati.",
+        scaleAbsent: "0 - Tidak terlihat",
+        scaleModerate: "5 - Cukup terlihat",
+        scaleStrong: "10 - Sangat jelas",
+        customBadge: "Tambahan",
         removeBtn: "Hapus",
-        summaryTitle: "✅ Ringkasan Pengiriman",
+        summaryTitle: "✅ Ringkasan Penilaian",
         time: "Waktu",
         resultsTitle: "📊 Hasil Penilaian",
-        welfareIndex: "Indeks Kesejahteraan (0-100)",
-        positiveWelfare: "Kesejahteraan Positif",
-        moderateWelfare: "Kesejahteraan Sedang",
-        welfareConcerns: "Perhatian Kesejahteraan",
+        welfareState: "Kondisi Kesejahteraan Utama",
+        positiveWelfare: "Kesejahteraan Baik",
+        moderateWelfare: "Kesejahteraan Campuran",
+        welfareConcerns: "Perlu Perhatian",
         interpretationTitle: "Interpretasi",
-        quadrantPC: "Rata-rata Tenang Positif (PC)",
-        quadrantPA: "Rata-rata Aktif Positif (PA)",
-        quadrantNC: "Rata-rata Tenang Negatif (NC)",
-        quadrantNA: "Rata-rata Aktif Negatif (NA)",
-        downloadBtn: "📥 Unduh Hasil sebagai JPEG",
+        quadrantPC: "Positif Tenang (PC)",
+        quadrantPA: "Positif Aktif (PA)",
+        quadrantNC: "Negatif Tenang (NC)",
+        quadrantNA: "Negatif Aktif (NA)",
+        dominantQuadrant: "Kuadran Dominan",
+        welfareResultPC: "Hewan menunjukkan kondisi Positif Tenang yang dominan. Terlihat santai, nyaman, dan tenteram — ini mengindikasikan kesejahteraan yang baik dalam keadaan tenang.",
+        welfareResultPA: "Hewan menunjukkan kondisi Positif Aktif yang dominan. Terlihat bersemangat, penuh rasa ingin tahu, dan suka bermain — ini mengindikasikan kesejahteraan yang baik dengan keterlibatan aktif.",
+        welfareResultNC: "Hewan menunjukkan kondisi Negatif Tenang yang dominan. Terlihat menarik diri, lesu, atau tidak responsif — ini menandakan kemungkinan kesejahteraan yang rendah dengan aktivitas yang minim.",
+        welfareResultNA: "Hewan menunjukkan kondisi Negatif Aktif yang dominan. Terlihat takut, gelisah, atau cemas — ini menandakan kemungkinan kesejahteraan yang rendah dengan tingkat stres yang tinggi.",
+        welfareResultMixed: "Hewan menunjukkan kondisi emosional yang beragam tanpa satu kuadran yang menonjol. Disarankan untuk melakukan pengamatan lanjutan guna memperjelas status kesejahteraannya.",
+        editIndicator: "Ubah nama indikator",
+        downloadBtn: "📥 Unduh Hasil (JPEG)",
         scatterPlotTitle: "Peta Ekspresi Perilaku QBA",
-        scatterPlotXAxis: "Gairah: RENDAH (Tenang) ← → TINGGI (Energetik)",
+        scatterPlotXAxis: "Tingkat Aktivitas: RENDAH (Tenang) ← → TINGGI (Aktif)",
         scatterPlotYAxis: "Valensi: Negatif ← → Positif",
-        legendPositive: "Indikator Positif",
-        legendNegative: "Indikator Negatif",
-        legendNeutral: "Indikator Kustom",
-        alertFillFields: "Harap isi Pengamat, Spesies, dan ID Individu/Kelompok sebelum mengirim.",
-        alertDuration: "Harap masukkan durasi pengamatan yang valid.",
+        legendPC: "Positif Tenang (PC)",
+        legendPA: "Positif Aktif (PA)",
+        legendNC: "Negatif Tenang (NC)",
+        legendNA: "Negatif Aktif (NA)",
+        alertFillFields: "Mohon lengkapi kolom Pengamat, Spesies, dan ID Individu/Kelompok sebelum mengirim.",
+        alertDuration: "Mohon masukkan durasi pengamatan yang benar.",
         alertExists: "Indikator dengan nama ini sudah ada!",
-        confirmReset: "Apakah Anda yakin ingin mereset formulir? Semua data yang dimasukkan akan dihapus.",
+        confirmReset: "Yakin ingin menghapus semua isian? Semua data yang sudah dimasukkan akan hilang.",
         confirmRemove: "Hapus indikator \"{{name}}\"?",
-        promptName: "Masukkan nama indikator kustom:",
-        promptDef: "Masukkan definisi singkat untuk indikator ini:",
-        lively: "Lincah",
-        livelyDef: "Penuh kehidupan dan energi; aktif dan ramah",
-        playful: "Bermain",
-        playfulDef: "Energik, lincah, terlibat dalam perilaku bermain",
-        sociable: "Ramah",
-        sociableDef: "Mencari teman; ramah",
+        promptName: "Masukkan nama indikator:",
+        promptDef: "Masukkan penjelasan singkat untuk indikator ini:",
+        lively: "Bersemangat",
+        livelyDef: "Penuh energi dan kehidupan; aktif dan antusias",
+        playful: "Suka Bermain",
+        playfulDef: "Aktif bermain, lincah, dan terlihat menikmati aktivitas",
+        sociable: "Mudah Bergaul",
+        sociableDef: "Senang berinteraksi dan dekat dengan individu lain",
         curious: "Ingin Tahu",
-        curiousDef: "Aktif menjelajah atau menyelidiki",
-        excited: "Bersemangat",
-        excitedDef: "Sangat antusias dan bersemangat",
+        curiousDef: "Aktif menjelajahi atau menyelidiki lingkungan sekitar",
+        excited: "Antusias",
+        excitedDef: "Terlihat sangat bersemangat dan penuh gairah",
         contentWord: "Puas",
-        contentWordDef: "Dalam keadaan bahagia yang damai",
+        contentWordDef: "Tampak tenang dan bahagia; dalam kondisi yang menyenangkan",
         calm: "Tenang",
-        calmDef: "Diam, damai, sikap yang stabil",
+        calmDef: "Sikap damai, tidak terganggu, dan stabil",
         comfortable: "Nyaman",
-        comfortableDef: "Santai secara fisik dan bebas dari batasan",
+        comfortableDef: "Tubuh rileks dan tidak menunjukkan tanda-tanda ketidaknyamanan",
         atEase: "Tenteram",
-        atEaseDef: "Bebas dari kekhawatiran, rasa sakit, atau batasan",
+        atEaseDef: "Bebas dari rasa khawatir, sakit, atau tekanan",
         relaxed: "Santai",
-        relaxedDef: "Postur longgar, gerakan halus dan tidak dipaksakan",
+        relaxedDef: "Postur tubuh longgar, gerakan halus dan alami",
         tense: "Tegang",
-        tenseDef: "Postur kaku, gerakan tiba-tiba atau terkendali",
-        wary: "Waspada",
-        waryDef: "Merasa atau menunjukkan kehati-hatian terhadap kemungkinan bahaya atau masalah",
-        withdrawn: "Menarik diri",
-        withdrawnDef: "Tidak ingin berkomunikasi dengan individu lain",
+        tenseDef: "Postur kaku, gerakan tiba-tiba atau terlihat menahan diri",
+        wary: "Siaga",
+        waryDef: "Tampak berhati-hati dan waspada terhadap potensi bahaya",
+        withdrawn: "Menarik Diri",
+        withdrawnDef: "Menjauh dari individu lain dan enggan berinteraksi",
         listless: "Lesu",
-        listlessDef: "Kurang energi atau antusiasme",
-        indifferent: "Acuh tak acuh",
-        indifferentDef: "Tidak memiliki minat atau simpati khusus; tidak peduli",
+        listlessDef: "Kurang bersemangat dan tidak menunjukkan minat terhadap lingkungan",
+        indifferent: "Acuh",
+        indifferentDef: "Tidak menunjukkan ketertarikan atau respons terhadap sekitarnya",
         frustrated: "Frustrasi",
-        frustratedDef: "Gelisah, berulang, atau sikap tidak tenang",
-        irritable: "Mudah Marah",
-        irritableDef: "Memiliki atau menunjukkan kecenderungan mudah jengkel atau marah",
+        frustratedDef: "Terlihat gelisah, melakukan gerakan berulang, atau tidak tenang",
+        irritable: "Mudah Tersinggung",
+        irritableDef: "Mudah terganggu dan menunjukkan reaksi marah atau jengkel",
         agitated: "Gelisah",
-        agitatedDef: "Merasa atau tampak bermasalah atau gugup",
+        agitatedDef: "Tampak resah, tidak bisa diam, dan terlihat terganggu",
         anxious: "Cemas",
-        anxiousDef: "Mengalami kekhawatiran, kegelisahan, atau gugup",
+        anxiousDef: "Menunjukkan tanda-tanda kekhawatiran atau ketidaktenangan",
         fearful: "Takut",
-        fearfulDef: "Penghindaran, membeku, atau menarik diri",
-        interpretationPositive: "Hewan menampilkan ekspresi perilaku yang mayoritas positif. Skor tinggi pada perilaku santai, waspada, ingin tahu, bermain, atau tenang dengan indikator negatif rendah menunjukkan status kesejahteraan yang baik.",
-        interpretationModerate: "Hewan menunjukkan campuran ekspresi perilaku positif dan negatif. Pertimbangkan konteksnya dan pantau perubahan apa pun. Beberapa tingkat ketegangan atau kewaspadaan mungkin sesuai tergantung situasinya.",
-        interpretationConcerns: "Hewan menunjukkan pola perilaku yang mengkhawatirkan dengan indikator negatif yang meningkat atau ekspresi positif yang rendah. Penilaian lebih lanjut dan potensi intervensi mungkin diperlukan.",
+        fearfulDef: "Menghindari, membeku, atau berusaha menyingkir dari situasi",
+        interpretationPositive: "Hewan menampilkan ekspresi perilaku yang didominasi sifat positif. Skor tinggi pada perilaku santai, ingin tahu, bermain, atau tenang dengan indikator negatif yang rendah menandakan kondisi kesejahteraan yang baik.",
+        interpretationModerate: "Hewan menunjukkan campuran perilaku positif dan negatif. Perlu mempertimbangkan konteks situasinya dan terus memantau perkembangan. Beberapa tingkat ketegangan atau kewaspadaan bisa saja wajar tergantung kondisi.",
+        interpretationConcerns: "Hewan menunjukkan pola perilaku yang perlu diperhatikan, dengan indikator negatif yang cukup tinggi atau ekspresi positif yang rendah. Disarankan untuk melakukan penilaian lebih lanjut dan kemungkinan intervensi.",
         whatIsQBA: "Apa itu QBA?",
-        qbaIntro: "Qualitative Behaviour Assessment (QBA) adalah metode penilaian kesejahteraan yang mengevaluasi bagaimana hewan berperilaku, dengan fokus pada ekspresi perilaku keseluruhan (misalnya santai, tegang, ingin tahu, takut), daripada menghitung perilaku spesifik. QBA mengintegrasikan postur, gerakan, responsivitas, dan interaksi untuk memberikan wawasan tentang keadaan afektif (emosional) hewan sebagaimana diamati oleh pengamat terlatih.",
+        qbaIntro: "Qualitative Behaviour Assessment (QBA) atau Penilaian Perilaku Kualitatif adalah metode untuk mengevaluasi kesejahteraan hewan berdasarkan ekspresi perilaku secara keseluruhan (misalnya: santai, tegang, ingin tahu, takut), bukan dengan menghitung perilaku tertentu. QBA memadukan pengamatan terhadap postur tubuh, cara bergerak, daya tanggap, dan interaksi untuk memahami kondisi emosional hewan sebagaimana dilihat oleh pengamat terlatih.",
         qbaImportanceTitle: "Mengapa QBA Penting dalam Model Lima Domain?",
-        qbaImportance: "Model Lima Domain menghubungkan kondisi fisik (Nutrisi, Lingkungan, Kesehatan, Perilaku) dengan Keadaan Mental hewan (Domain 5). QBA sangat berharga karena secara langsung menginformasikan domain mental/afektif ini, menangkap pengalaman positif dan negatif yang mungkin tidak terdeteksi oleh ukuran fisik atau kuantitatif saja.",
-        qbaHowTitle: "Bagaimana QBA Bekerja?",
-        qbaStep1: "Seorang pengamat mengamati hewan atau kelompok selama periode yang ditentukan.",
-        qbaStep2: "Setelah pengamatan, pengamat memberi skor pada istilah deskriptif standar (misalnya skala 0–10) berdasarkan seberapa kuat setiap kualitas diekspresikan.",
-        qbaStep3: "Profil yang dihasilkan digunakan untuk membandingkan kesejahteraan dari waktu ke waktu, antar individu, atau kondisi manajemen.",
-        qbaEffective: "QBA paling efektif bila digunakan bersama dengan indikator perilaku dan kesehatan kuantitatif, memberikan penilaian kesejahteraan yang lebih holistik.",
-        qbaSummary: "QBA adalah metode terstruktur untuk menilai ekspresi emosional hewan dan merupakan alat kunci untuk mengevaluasi domain keadaan mental dalam kerangka kesejahteraan hewan Lima Domain."
+        qbaImportance: "Model Lima Domain menghubungkan kondisi fisik (Nutrisi, Lingkungan, Kesehatan, Perilaku) dengan Kondisi Mental hewan (Domain ke-5). QBA sangat berharga karena langsung memberikan informasi tentang domain mental/afektif ini, menangkap pengalaman positif maupun negatif yang mungkin tidak terdeteksi hanya melalui pengukuran fisik atau kuantitatif.",
+        qbaHowTitle: "Bagaimana Cara Kerja QBA?",
+        qbaStep1: "Pengamat mengamati hewan atau kelompok hewan selama jangka waktu yang ditentukan.",
+        qbaStep2: "Setelah pengamatan, pengamat memberikan skor pada setiap istilah deskriptif (skala 0–10) berdasarkan seberapa kuat ekspresi perilaku tersebut terlihat.",
+        qbaStep3: "Profil yang dihasilkan dapat digunakan untuk membandingkan kesejahteraan antar waktu, antar individu, atau antar kondisi pengelolaan.",
+        qbaEffective: "QBA paling efektif jika digunakan bersamaan dengan indikator perilaku dan kesehatan kuantitatif, sehingga menghasilkan penilaian kesejahteraan yang lebih menyeluruh.",
+        qbaSummary: "QBA adalah metode terstruktur untuk menilai ekspresi emosional hewan, dan merupakan alat penting dalam mengevaluasi domain kondisi mental pada kerangka kesejahteraan hewan Lima Domain."
     }
 };
 
 const descriptorList = [
-    { name: "Lively", def: "Full of life and energy; active and outgoing", type: "default" },
-    { name: "Playful", def: "Energetic, bouncy, engaged in play behaviors", type: "default" },
-    { name: "Sociable", def: "Seeking companionship; friendly", type: "default" },
-    { name: "Curious", def: "Actively exploring or investigating", type: "default" },
-    { name: "Excited", def: "Very enthusiastic and eager", type: "default" },
-    { name: "Content", def: "In a state of peaceful happiness", type: "default" },
-    { name: "Calm", def: "Quiet, peaceful, settled demeanor", type: "default" },
-    { name: "Comfortable", def: "Physically relaxed and free from constraint", type: "default" },
-    { name: "At ease", def: "Free from worry, pain, or constraint", type: "default" },
-    { name: "Relaxed", def: "Loose posture, smooth and unforced movement", type: "default" },
-    { name: "Tense", def: "Rigid posture, abrupt or restrained movement", type: "default" },
-    { name: "Wary", def: "Feeling or showing caution about possible dangers or problems", type: "default" },
-    { name: "Withdrawn", def: "Not wanting to communicate with other individuals", type: "default" },
-    { name: "Listless", def: "Lacking energy or enthusiasm", type: "default" },
-    { name: "Indifferent", def: "Having no particular interest or sympathy; unconcerned", type: "default" },
-    { name: "Frustrated", def: "Agitated, repetitive, or restless demeanour", type: "default" },
-    { name: "Irritable", def: "Having or showing a tendency to be easily annoyed or made angry", type: "default" },
-    { name: "Agitated", def: "Feeling or appearing troubled or nervous", type: "default" },
-    { name: "Anxious", def: "Experiencing worry, unease, or nervousness", type: "default" },
-    { name: "Fearful", def: "Avoidance, freezing, or withdrawal", type: "default" }
+    { name: "Lively", def: "Full of life and energy; active and outgoing", type: "default", quadrant: "PA" },
+    { name: "Playful", def: "Energetic, bouncy, engaged in play behaviors", type: "default", quadrant: "PA" },
+    { name: "Sociable", def: "Seeking companionship; friendly", type: "default", quadrant: "PA" },
+    { name: "Curious", def: "Actively exploring or investigating", type: "default", quadrant: "PA" },
+    { name: "Excited", def: "Very enthusiastic and eager", type: "default", quadrant: "PA" },
+    { name: "Content", def: "In a state of peaceful happiness", type: "default", quadrant: "PC" },
+    { name: "Calm", def: "Quiet, peaceful, settled demeanor", type: "default", quadrant: "PC" },
+    { name: "Comfortable", def: "Physically relaxed and free from constraint", type: "default", quadrant: "PC" },
+    { name: "At ease", def: "Free from worry, pain, or constraint", type: "default", quadrant: "PC" },
+    { name: "Relaxed", def: "Loose posture, smooth and unforced movement", type: "default", quadrant: "PC" },
+    { name: "Tense", def: "Rigid posture, abrupt or restrained movement", type: "default", quadrant: "NC" },
+    { name: "Wary", def: "Feeling or showing caution about possible dangers or problems", type: "default", quadrant: "NC" },
+    { name: "Withdrawn", def: "Not wanting to communicate with other individuals", type: "default", quadrant: "NC" },
+    { name: "Listless", def: "Lacking energy or enthusiasm", type: "default", quadrant: "NC" },
+    { name: "Indifferent", def: "Having no particular interest or sympathy; unconcerned", type: "default", quadrant: "NC" },
+    { name: "Frustrated", def: "Agitated, repetitive, or restless demeanour", type: "default", quadrant: "NA" },
+    { name: "Irritable", def: "Having or showing a tendency to be easily annoyed or made angry", type: "default", quadrant: "NA" },
+    { name: "Agitated", def: "Feeling or appearing troubled or nervous", type: "default", quadrant: "NA" },
+    { name: "Anxious", def: "Experiencing worry, unease, or nervousness", type: "default", quadrant: "NA" },
+    { name: "Fearful", def: "Avoidance, freezing, or withdrawal", type: "default", quadrant: "NA" }
 ];
 
-let customIndicatorCounter = 0;
+// Fisher-Yates shuffle to randomize descriptor order on each page load
+function shuffleArray(arr) {
+    for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+}
+shuffleArray(descriptorList);
 
 function setLanguage(lang) {
     currentLanguage = lang;
@@ -273,13 +305,16 @@ function updateUI() {
     document.querySelectorAll('label')[0].textContent = trans.observer;
     document.querySelectorAll('label')[1].textContent = trans.species;
     document.querySelectorAll('label')[2].textContent = trans.individualId;
-    document.querySelectorAll('label')[3].textContent = trans.duration;
-    document.querySelectorAll('label')[4].textContent = trans.context;
+    document.querySelectorAll('label')[3].textContent = trans.period;
+    document.querySelectorAll('label')[4].textContent = trans.duration;
+    document.getElementById('durationSuggestion').textContent = trans.durationSuggestion;
+    document.querySelectorAll('label')[5].textContent = trans.context;
 
     // Update placeholders
     document.getElementById('observer').placeholder = trans.observerPlaceholder;
     document.getElementById('species').placeholder = trans.speciesPlaceholder;
     document.getElementById('animalId').placeholder = trans.idPlaceholder;
+    document.getElementById('period').placeholder = trans.periodPlaceholder;
     document.getElementById('duration').placeholder = trans.durationPlaceholder;
 
     // Update context options
@@ -295,15 +330,12 @@ function updateUI() {
     document.querySelector('h2').textContent = trans.indicatorsTitle;
 
     // Update notes label and placeholder
-    document.querySelectorAll('label')[5].textContent = trans.notes;
+    document.querySelectorAll('label')[6].textContent = trans.notes;
     document.getElementById('notes').placeholder = trans.notesPlaceholder;
 
     // Update buttons
     document.querySelectorAll('.actions button')[0].textContent = trans.resetBtn;
     document.querySelectorAll('.actions button')[1].textContent = trans.submitBtn;
-
-    // Update add custom button
-    document.querySelector('.btn-secondary').textContent = trans.addCustom;
 
     // Update info note
     document.querySelector('.note').textContent = trans.infoNote;
@@ -379,33 +411,32 @@ function getDescriptorDef(baseName) {
 
 function renderDescriptors() {
     const container = document.getElementById("descriptors");
+    // Preserve current slider values before re-rendering
+    const savedValues = {};
+    descriptorList.forEach(d => {
+        const el = document.getElementById(d.name);
+        if (el) savedValues[d.name] = el.value;
+    });
     container.innerHTML = '';
 
     descriptorList.forEach((d, index) => {
         const div = document.createElement("div");
         div.className = "descriptor";
 
-        const removeButton = d.type === "custom"
-            ? `<button class="remove-indicator" onclick="removeIndicator(${index})">${t('removeBtn')}</button>`
-            : '';
-
-        const typeBadge = d.type === "custom"
-            ? `<span class="descriptor-type-badge badge-custom">${t('customBadge')}</span>`
-            : '';
-
         const displayName = d.type === "default" ? getDescriptorName(d.name) : d.name;
         const displayDef = d.type === "default" ? getDescriptorDef(d.name) : d.def;
+        const savedVal = savedValues[d.name] || '0';
 
         div.innerHTML = `
         <div class="descriptor-header">
-          <span class="descriptor-name">${displayName}${typeBadge}</span>
+          <span class="descriptor-name" id="name-display-${index}">${displayName}</span>
           <div style="display: flex; align-items: center; gap: 8px;">
-            <span class="descriptor-value" id="${d.name}-value">0</span>
-            ${removeButton}
+            <button class="edit-indicator-btn" onclick="editIndicatorName(${index})" title="${t('editIndicator')}">✏️</button>
+            <span class="descriptor-value" id="${d.name}-value">${savedVal}</span>
           </div>
         </div>
-        <div class="descriptor-def">${displayDef}</div>
-        <input type="range" min="0" max="10" step="1" value="0" id="${d.name}" 
+        <div class="descriptor-def" id="def-display-${index}">${displayDef}</div>
+        <input type="range" min="0" max="10" step="1" value="${savedVal}" id="${d.name}" 
                oninput="updateValue('${d.name}')">
         <div class="scale-labels">
           <span>${t('scaleAbsent')}</span>
@@ -418,33 +449,28 @@ function renderDescriptors() {
     });
 }
 
-function addCustomIndicator() {
-    const name = prompt(t('promptName'));
-    if (!name || !name.trim()) return;
+function editIndicatorName(index) {
+    const d = descriptorList[index];
+    const currentName = d.type === "default" ? getDescriptorName(d.name) : d.name;
+    const currentDef = d.type === "default" ? getDescriptorDef(d.name) : d.def;
+    const newName = prompt(t('promptName'), currentName);
+    if (!newName || !newName.trim() || newName.trim() === currentName) return;
 
-    const definition = prompt(t('promptDef'));
-    if (!definition || !definition.trim()) return;
+    // Save current slider value
+    const slider = document.getElementById(d.name);
+    const currentVal = slider ? slider.value : '0';
 
-    // Check if name already exists
-    if (descriptorList.some(d => d.name.toLowerCase() === name.trim().toLowerCase())) {
-        alert(t('alertExists'));
-        return;
-    }
+    // Update the descriptor - mark as edited so it uses custom name
+    const oldName = d.name;
+    d.name = newName.trim();
+    d.type = "edited";
 
-    descriptorList.push({
-        name: name.trim(),
-        def: definition.trim(),
-        type: "custom"
-    });
-
+    // Re-render and restore slider value
     renderDescriptors();
-}
-
-function removeIndicator(index) {
-    const confirmMsg = t('confirmRemove').replace('{{name}}', descriptorList[index].name);
-    if (confirm(confirmMsg)) {
-        descriptorList.splice(index, 1);
-        renderDescriptors();
+    const newSlider = document.getElementById(d.name);
+    if (newSlider) {
+        newSlider.value = currentVal;
+        updateValue(d.name);
     }
 }
 
@@ -462,6 +488,7 @@ function resetForm() {
         document.getElementById('observer').value = '';
         document.getElementById('species').value = '';
         document.getElementById('animalId').value = '';
+        document.getElementById('period').value = '';
         document.getElementById('duration').value = '';
         document.getElementById('context').value = 'Baseline';
         document.getElementById('notes').value = '';
@@ -480,13 +507,21 @@ function resetForm() {
 }
 
 function submitQBA() {
-    const observer = document.getElementById('observer').value;
-    const species = document.getElementById('species').value;
-    const animalId = document.getElementById('animalId').value;
+    const observer = document.getElementById('observer').value.trim();
+    const species = document.getElementById('species').value.trim();
+    const animalId = document.getElementById('animalId').value.trim();
+    const period = document.getElementById('period').value.trim();
     const duration = document.getElementById('duration').value;
+    const context = document.getElementById('context').value;
+    const notes = document.getElementById('notes').value.trim();
 
     if (!observer || !species || !animalId) {
         alert(t('alertFillFields'));
+        return;
+    }
+
+    if (!period) {
+        alert(t('alertPeriod'));
         return;
     }
 
@@ -496,14 +531,17 @@ function submitQBA() {
     }
 
     const data = {
-        timestamp: new Date().toISOString(),
-        observer: observer,
-        species: species,
-        animalId: animalId,
-        duration: parseInt(duration),
-        context: document.getElementById('context').value,
-        scores: {},
-        notes: document.getElementById('notes').value
+        metadata: {
+            observer,
+            species,
+            animalId,
+            period,
+            duration: parseInt(duration),
+            context,
+            notes,
+            timestamp: new Date().toLocaleString()
+        },
+        scores: {}
     };
 
     descriptorList.forEach(d => {
@@ -518,12 +556,13 @@ function submitQBA() {
     // Show summary
     const summaryDiv = document.getElementById('summary');
     let summaryHTML = `<h3>${t('summaryTitle')}</h3>`;
-    summaryHTML += `<div class="summary-item"><strong>${t('time')}:</strong> ${new Date().toLocaleString()}</div>`;
-    summaryHTML += `<div class="summary-item"><strong>${t('observer')}:</strong> ${data.observer}</div>`;
-    summaryHTML += `<div class="summary-item"><strong>${t('species')}:</strong> ${data.species}</div>`;
-    summaryHTML += `<div class="summary-item"><strong>${t('individualId')}:</strong> ${data.animalId}</div>`;
-    summaryHTML += `<div class="summary-item"><strong>${t('duration')}:</strong> ${data.duration} ${currentLanguage === 'id' ? 'menit' : 'minutes'}</div>`;
-    summaryHTML += `<div class="summary-item"><strong>${t('context')}:</strong> ${data.context}</div>`;
+    summaryHTML += `<div class="summary-item"><strong>${t('time')}:</strong> ${data.metadata.timestamp}</div>`;
+    summaryHTML += `<div class="summary-item"><strong>${t('observer')}:</strong> ${data.metadata.observer}</div>`;
+    summaryHTML += `<div class="summary-item"><strong>${t('species')}:</strong> ${data.metadata.species}</div>`;
+    summaryHTML += `<div class="summary-item"><strong>${t('individualId')}:</strong> ${data.metadata.animalId}</div>`;
+    summaryHTML += `<div class="summary-item"><strong>${t('period')}:</strong> ${data.metadata.period}</div>`;
+    summaryHTML += `<div class="summary-item"><strong>${t('duration')}:</strong> ${data.metadata.duration} ${currentLanguage === 'id' ? 'menit' : 'minutes'}</div>`;
+    summaryHTML += `<div class="summary-item"><strong>${t('context')}:</strong> ${data.metadata.context}</div>`;
     summaryHTML += '<hr style="margin: 12px 0;">';
 
     descriptorList.forEach(d => {
@@ -542,90 +581,111 @@ function submitQBA() {
 }
 
 function showResults(data) {
-    // Calculate quadrant indicators
-    const descriptorsPC = ['Relaxed', 'At ease', 'Content', 'Comfortable', 'Calm'];
-    const descriptorsPA = ['Lively', 'Curious', 'Sociable', 'Playful', 'Excited'];
-    const descriptorsNC = ['Tense', 'Withdrawn', 'Wary', 'Indifferent', 'Listless'];
-    const descriptorsNA = ['Fearful', 'Irritable', 'Frustrated', 'Agitated', 'Anxious'];
+    // Calculate quadrant averages using the quadrant property on each descriptor
+    const quadrantScores = { PC: [], PA: [], NC: [], NA: [] };
+    descriptorList.forEach(d => {
+        if (d.quadrant && data.scores[d.name] !== undefined) {
+            quadrantScores[d.quadrant].push(data.scores[d.name]);
+        }
+    });
 
-    const calculateAvg = (descList) => {
-        let score = 0, count = 0;
-        descList.forEach(d => {
-            if (data.scores[d] !== undefined) {
-                score += data.scores[d];
-                count++;
-            }
-        });
-        return count > 0 ? (score / count).toFixed(1) : 0;
-    };
+    const calcAvg = (arr) => arr.length > 0 ? (arr.reduce((a, b) => a + b, 0) / arr.length).toFixed(1) : '0.0';
+    const avgPC = calcAvg(quadrantScores.PC);
+    const avgPA = calcAvg(quadrantScores.PA);
+    const avgNC = calcAvg(quadrantScores.NC);
+    const avgNA = calcAvg(quadrantScores.NA);
 
-    const avgPC = calculateAvg(descriptorsPC);
-    const avgPA = calculateAvg(descriptorsPA);
-    const avgNC = calculateAvg(descriptorsNC);
-    const avgNA = calculateAvg(descriptorsNA);
-    
-    const avgPositive = ((parseFloat(avgPC) + parseFloat(avgPA)) / 2).toFixed(1);
-    const avgNegative = ((parseFloat(avgNC) + parseFloat(avgNA)) / 2).toFixed(1);
+    // Determine the dominant quadrant (highest average score)
+    const quadrantAverages = [
+        { key: 'PC', label: t('quadrantPC'), avg: parseFloat(avgPC), color: '#10b981', emoji: '🟢' },
+        { key: 'PA', label: t('quadrantPA'), avg: parseFloat(avgPA), color: '#3b82f6', emoji: '🔵' },
+        { key: 'NC', label: t('quadrantNC'), avg: parseFloat(avgNC), color: '#f59e0b', emoji: '🟡' },
+        { key: 'NA', label: t('quadrantNA'), avg: parseFloat(avgNA), color: '#ef4444', emoji: '🔴' }
+    ];
 
-    // Calculate overall welfare score (0-100)
-    const welfareScore = Math.round(((avgPositive * 10) + ((10 - avgNegative) * 10)) / 2);
+    // Sort by average descending to find dominant
+    const sorted = [...quadrantAverages].sort((a, b) => b.avg - a.avg);
+    const dominant = sorted[0];
+    const isDominantClear = dominant.avg > 0 && (sorted.length < 2 || dominant.avg > sorted[1].avg);
 
-    // Determine interpretation
+    // Welfare state is determined by which quadrant scores highest
     let interpretation = '';
     let interpretationColor = '';
-
-    if (welfareScore >= 75) {
-        interpretation = t('positiveWelfare');
-        interpretationColor = '#10b981';
-    } else if (welfareScore >= 50) {
-        interpretation = t('moderateWelfare');
-        interpretationColor = '#f59e0b';
-    } else {
-        interpretation = t('welfareConcerns');
-        interpretationColor = '#ef4444';
-    }
-
-    // Generate detailed interpretation
     let detailedInterpretation = '';
-    if (welfareScore >= 75) {
-        detailedInterpretation = t('interpretationPositive');
-    } else if (welfareScore >= 50) {
-        detailedInterpretation = t('interpretationModerate');
-    } else {
-        detailedInterpretation = t('interpretationConcerns');
+
+    if (!isDominantClear || dominant.avg === 0) {
+        interpretation = t('moderateWelfare');
+        interpretationColor = '#6b7280';
+        detailedInterpretation = t('welfareResultMixed');
+    } else if (dominant.key === 'PC') {
+        interpretation = t('positiveWelfare') + ' — ' + t('quadrantPC');
+        interpretationColor = '#10b981';
+        detailedInterpretation = t('welfareResultPC');
+    } else if (dominant.key === 'PA') {
+        interpretation = t('positiveWelfare') + ' — ' + t('quadrantPA');
+        interpretationColor = '#3b82f6';
+        detailedInterpretation = t('welfareResultPA');
+    } else if (dominant.key === 'NC') {
+        interpretation = t('welfareConcerns') + ' — ' + t('quadrantNC');
+        interpretationColor = '#f59e0b';
+        detailedInterpretation = t('welfareResultNC');
+    } else if (dominant.key === 'NA') {
+        interpretation = t('welfareConcerns') + ' — ' + t('quadrantNA');
+        interpretationColor = '#ef4444';
+        detailedInterpretation = t('welfareResultNA');
     }
 
     // Build results HTML
     const resultsDiv = document.getElementById('results');
     let resultsHTML = `<h3>${t('resultsTitle')}</h3>`;
 
+    // Welfare state banner based on dominant quadrant
     resultsHTML += `
       <div class="welfare-score">
-        <div class="welfare-score-value">${welfareScore}</div>
-        <div class="welfare-interpretation" style="color: ${interpretationColor}">${interpretation}</div>
-        <div style="color: #718096; font-size: 0.9rem; margin-top: 4px;">${t('welfareIndex')}</div>
+        <div class="welfare-interpretation" style="color: ${interpretationColor}; font-size: 1.3rem; font-weight: 700;">${interpretation}</div>
+        <div style="color: #718096; font-size: 0.9rem; margin-top: 4px;">${t('welfareState')}</div>
       </div>
     `;
 
-    resultsHTML += '<div class="score-bars">';
-
-    // Add bars for each descriptor with scores > 0
-    descriptorList.forEach(d => {
-        const score = data.scores[d.name];
-        if (score > 0) {
-            const percentage = (score / 10) * 100;
-            resultsHTML += `
-          <div class="score-bar-item">
-            <div class="score-bar-label">
-              <span><strong>${d.name}</strong></span>
-              <span>${score}/10</span>
-            </div>
-            <div class="score-bar-bg">
-              <div class="score-bar-fill" style="width: ${percentage}%">${score}</div>
-            </div>
+    // Quadrant averages grid
+    resultsHTML += '<div class="quadrant-grid">';
+    quadrantAverages.forEach(q => {
+        const isHighest = isDominantClear && q.key === dominant.key;
+        resultsHTML += `
+          <div class="quadrant-card ${isHighest ? 'quadrant-dominant' : ''}" style="border-left: 4px solid ${q.color};">
+            <div class="quadrant-label">${q.emoji} ${q.label}</div>
+            <div class="quadrant-avg" style="color: ${q.color};">${q.key === 'PC' ? avgPC : q.key === 'PA' ? avgPA : q.key === 'NC' ? avgNC : avgNA}/10</div>
+            ${isHighest ? '<div class="quadrant-badge">★ ' + t('dominantQuadrant') + '</div>' : ''}
           </div>
         `;
-        }
+    });
+    resultsHTML += '</div>';
+
+    resultsHTML += '<div class="score-bars">';
+
+    // Add bars for each descriptor with scores > 0, grouped by quadrant
+    const quadrantOrder = ['PC', 'PA', 'NC', 'NA'];
+    const quadrantColors = { PC: '#10b981', PA: '#3b82f6', NC: '#f59e0b', NA: '#ef4444' };
+    quadrantOrder.forEach(qKey => {
+        const qDescriptors = descriptorList.filter(d => d.quadrant === qKey);
+        qDescriptors.forEach(d => {
+            const score = data.scores[d.name];
+            if (score > 0) {
+                const percentage = (score / 10) * 100;
+                const barColor = quadrantColors[qKey];
+                resultsHTML += `
+              <div class="score-bar-item">
+                <div class="score-bar-label">
+                  <span><strong>${d.name}</strong> <small style="color:${barColor};">(${qKey})</small></span>
+                  <span>${score}/10</span>
+                </div>
+                <div class="score-bar-bg">
+                  <div class="score-bar-fill" style="width: ${percentage}%; background: ${barColor};">${score}</div>
+                </div>
+              </div>
+            `;
+            }
+        });
     });
 
     resultsHTML += '</div>';
@@ -633,13 +693,7 @@ function showResults(data) {
     resultsHTML += `
       <div class="interpretation-text">
         <h4>${t('interpretationTitle')}</h4>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-            <p><strong>${t('quadrantPC')}:</strong> ${avgPC}/10</p>
-            <p><strong>${t('quadrantPA')}:</strong> ${avgPA}/10</p>
-            <p><strong>${t('quadrantNC')}:</strong> ${avgNC}/10</p>
-            <p><strong>${t('quadrantNA')}:</strong> ${avgNA}/10</p>
-        </div>
-        <p style="margin-top: 12px;">${detailedInterpretation}</p>
+        <p style="margin-top: 8px;">${detailedInterpretation}</p>
       </div>
     `;
 
@@ -650,16 +704,20 @@ function showResults(data) {
         <canvas id="scatterPlot"></canvas>
         <div class="plot-legend">
           <div class="legend-item">
-            <div class="legend-dot legend-positive"></div>
-            <span>${t('legendPositive')}</span>
+            <div class="legend-dot" style="background: #10b981;"></div>
+            <span>${t('legendPC')}</span>
           </div>
           <div class="legend-item">
-            <div class="legend-dot legend-negative"></div>
-            <span>${t('legendNegative')}</span>
+            <div class="legend-dot" style="background: #3b82f6;"></div>
+            <span>${t('legendPA')}</span>
           </div>
           <div class="legend-item">
-            <div class="legend-dot legend-neutral"></div>
-            <span>${t('legendNeutral')}</span>
+            <div class="legend-dot" style="background: #f59e0b;"></div>
+            <span>${t('legendNC')}</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background: #ef4444;"></div>
+            <span>${t('legendNA')}</span>
           </div>
         </div>
       </div>
@@ -673,10 +731,9 @@ function showResults(data) {
     // Store data for download
     window.currentQBAData = data;
     window.currentQBAResults = {
-        welfareScore,
         interpretation,
-        avgPositive,
-        avgNegative
+        dominant: isDominantClear ? dominant.key : 'Mixed',
+        avgPC, avgPA, avgNC, avgNA
     };
 
     // Draw scatter plot after DOM update
@@ -705,33 +762,39 @@ function drawScatterPlot(data) {
     // Clear canvas
     ctx.clearRect(0, 0, width, height);
 
-    // Define indicator positions based on typical QBA PCA mapping
-    // X-axis: Valence (negative to positive), Y-axis: Arousal (low to high)
+    // Define indicator positions based on quadrant mapping
+    // X-axis: Arousal (LOW/Calm left, HIGH/Energetic right), Y-axis: Valence (Negative bottom, Positive top)
     const indicatorPositions = {
-        'Relaxed': { x: -0.7, y: 0.7, type: 'positive' },
-        'At ease': { x: -0.6, y: 0.6, type: 'positive' },
-        'Content': { x: -0.5, y: 0.5, type: 'positive' },
-        'Comfortable': { x: -0.3, y: 0.3, type: 'positive' },
-        'Calm': { x: -0.4, y: 0.4, type: 'positive' },
+        // PC = Positive Calm (top-left)
+        'Relaxed': { x: -0.7, y: 0.7, quadrant: 'PC' },
+        'At ease': { x: -0.6, y: 0.6, quadrant: 'PC' },
+        'Content': { x: -0.5, y: 0.5, quadrant: 'PC' },
+        'Comfortable': { x: -0.3, y: 0.3, quadrant: 'PC' },
+        'Calm': { x: -0.4, y: 0.4, quadrant: 'PC' },
         
-        'Lively': { x: 0.5, y: 0.6, type: 'positive' },
-        'Curious': { x: 0.6, y: 0.4, type: 'positive' },
-        'Sociable': { x: 0.4, y: 0.5, type: 'positive' },
-        'Playful': { x: 0.7, y: 0.7, type: 'positive' },
-        'Excited': { x: 0.8, y: 0.8, type: 'positive' },
+        // PA = Positive Active (top-right)
+        'Lively': { x: 0.5, y: 0.6, quadrant: 'PA' },
+        'Curious': { x: 0.6, y: 0.4, quadrant: 'PA' },
+        'Sociable': { x: 0.4, y: 0.5, quadrant: 'PA' },
+        'Playful': { x: 0.7, y: 0.7, quadrant: 'PA' },
+        'Excited': { x: 0.8, y: 0.8, quadrant: 'PA' },
         
-        'Tense': { x: -0.5, y: -0.4, type: 'negative' },
-        'Withdrawn': { x: -0.4, y: -0.6, type: 'negative' },
-        'Wary': { x: -0.6, y: -0.5, type: 'negative' },
-        'Indifferent': { x: -0.2, y: -0.8, type: 'negative' },
-        'Listless': { x: -0.3, y: -0.7, type: 'negative' },
+        // NC = Negative Calm (bottom-left)
+        'Tense': { x: -0.5, y: -0.4, quadrant: 'NC' },
+        'Withdrawn': { x: -0.4, y: -0.6, quadrant: 'NC' },
+        'Wary': { x: -0.6, y: -0.5, quadrant: 'NC' },
+        'Indifferent': { x: -0.2, y: -0.8, quadrant: 'NC' },
+        'Listless': { x: -0.3, y: -0.7, quadrant: 'NC' },
         
-        'Fearful': { x: 0.9, y: -0.8, type: 'negative' },
-        'Irritable': { x: 0.6, y: -0.5, type: 'negative' },
-        'Frustrated': { x: 0.5, y: -0.4, type: 'negative' },
-        'Agitated': { x: 0.8, y: -0.7, type: 'negative' },
-        'Anxious': { x: 0.7, y: -0.6, type: 'negative' }
+        // NA = Negative Active (bottom-right)
+        'Fearful': { x: 0.9, y: -0.8, quadrant: 'NA' },
+        'Irritable': { x: 0.6, y: -0.5, quadrant: 'NA' },
+        'Frustrated': { x: 0.5, y: -0.4, quadrant: 'NA' },
+        'Agitated': { x: 0.8, y: -0.7, quadrant: 'NA' },
+        'Anxious': { x: 0.7, y: -0.6, quadrant: 'NA' }
     };
+
+    const quadrantColors = { PC: '#10b981', PA: '#3b82f6', NC: '#f59e0b', NA: '#ef4444' };
 
     // Draw axes
     ctx.strokeStyle = '#cbd5e0';
@@ -793,6 +856,59 @@ function drawScatterPlot(data) {
     ctx.fillText(t('scatterPlotYAxis'), 0, 0);
     ctx.restore();
 
+    // Draw quadrant labels with average scores
+    const results = window.currentQBAResults || {};
+    const avgLabels = {
+        PC: results.avgPC || '0.0',
+        PA: results.avgPA || '0.0',
+        NC: results.avgNC || '0.0',
+        NA: results.avgNA || '0.0'
+    };
+
+    ctx.textAlign = 'center';
+
+    // PC (top-left)
+    ctx.font = 'bold 14px Arial';
+    ctx.globalAlpha = 0.3;
+    ctx.fillStyle = '#10b981';
+    ctx.fillText('PC', centerX - radius * 0.5, centerY - radius * 0.85);
+    ctx.globalAlpha = 1;
+    ctx.font = 'bold 16px Arial';
+    ctx.fillStyle = '#10b981';
+    ctx.fillText(avgLabels.PC + '/10', centerX - radius * 0.5, centerY - radius * 0.85 + 18);
+
+    // PA (top-right)
+    ctx.font = 'bold 14px Arial';
+    ctx.globalAlpha = 0.3;
+    ctx.fillStyle = '#3b82f6';
+    ctx.fillText('PA', centerX + radius * 0.5, centerY - radius * 0.85);
+    ctx.globalAlpha = 1;
+    ctx.font = 'bold 16px Arial';
+    ctx.fillStyle = '#3b82f6';
+    ctx.fillText(avgLabels.PA + '/10', centerX + radius * 0.5, centerY - radius * 0.85 + 18);
+
+    // NC (bottom-left)
+    ctx.font = 'bold 14px Arial';
+    ctx.globalAlpha = 0.3;
+    ctx.fillStyle = '#f59e0b';
+    ctx.fillText('NC', centerX - radius * 0.5, centerY + radius * 0.9);
+    ctx.globalAlpha = 1;
+    ctx.font = 'bold 16px Arial';
+    ctx.fillStyle = '#f59e0b';
+    ctx.fillText(avgLabels.NC + '/10', centerX - radius * 0.5, centerY + radius * 0.9 + 18);
+
+    // NA (bottom-right)
+    ctx.font = 'bold 14px Arial';
+    ctx.globalAlpha = 0.3;
+    ctx.fillStyle = '#ef4444';
+    ctx.fillText('NA', centerX + radius * 0.5, centerY + radius * 0.9);
+    ctx.globalAlpha = 1;
+    ctx.font = 'bold 16px Arial';
+    ctx.fillStyle = '#ef4444';
+    ctx.fillText(avgLabels.NA + '/10', centerX + radius * 0.5, centerY + radius * 0.9 + 18);
+
+    ctx.globalAlpha = 1;
+
     // Plot data points
     Object.keys(data.scores).forEach(name => {
         const score = data.scores[name];
@@ -804,15 +920,8 @@ function drawScatterPlot(data) {
             // Size based on score
             const dotSize = 3 + (score / 10) * 7;
 
-            // Color based on type
-            let color;
-            if (pos.type === 'positive') {
-                color = '#10b981';
-            } else if (pos.type === 'negative') {
-                color = '#ef4444';
-            } else {
-                color = '#6b7280';
-            }
+            // Color based on quadrant
+            const color = quadrantColors[pos.quadrant] || '#6b7280';
 
             // Draw point
             ctx.fillStyle = color;
@@ -827,32 +936,6 @@ function drawScatterPlot(data) {
             const displayName = descriptorList.find(d => d.name === name)?.name || name;
             const translatedName = getDescriptorName(displayName);
             ctx.fillText(translatedName, x, y - dotSize - 5);
-        }
-    });
-
-    // Handle custom indicators (place them randomly but sensibly)
-    Object.keys(data.scores).forEach(name => {
-        const score = data.scores[name];
-        if (score > 0 && !indicatorPositions[name]) {
-            // Custom indicator - place near center
-            const angle = Math.random() * 2 * Math.PI;
-            const distance = Math.random() * 0.3 * radius;
-            const x = centerX + Math.cos(angle) * distance;
-            const y = centerY + Math.sin(angle) * distance;
-
-            const dotSize = 3 + (score / 10) * 7;
-
-            // Draw point
-            ctx.fillStyle = '#6b7280';
-            ctx.beginPath();
-            ctx.arc(x, y, dotSize, 0, 2 * Math.PI);
-            ctx.fill();
-
-            // Draw label
-            ctx.fillStyle = '#2d3748';
-            ctx.font = 'bold 11px Arial';
-            ctx.textAlign = 'center';
-            ctx.fillText(name, x, y - dotSize - 5);
         }
     });
 }

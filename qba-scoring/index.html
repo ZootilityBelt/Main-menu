@@ -48,8 +48,13 @@
                 <input id="animalId" type="text" placeholder="e.g., L-001" />
             </div>
             <div class="field-group">
+                <label>Observation Period</label>
+                <input id="period" type="text" placeholder="e.g., Morning, 09:00" />
+            </div>
+            <div class="field-group">
                 <label>Observation Duration (minutes)</label>
-                <input id="duration" type="number" min="1" placeholder="e.g., 30" />
+                <div id="durationSuggestion" style="font-size: 0.75rem; color: #6b7280; margin-bottom: 4px;">Recommendation: 2 minutes</div>
+                <input id="duration" type="number" min="1" placeholder="e.g., 2" />
             </div>
             <div class="field-group">
                 <label>Context</label>
@@ -72,12 +77,6 @@
 
         <!-- Descriptors -->
         <div id="descriptors"></div>
-
-        <div style="text-align: center; margin: 20px 0;">
-            <button class="btn-secondary" onclick="addCustomIndicator()" style="padding: 10px 24px;">
-                ➕ Add Custom Indicator
-            </button>
-        </div>
 
         <div class="field-group">
             <label>Observer Notes (optional)</label>
