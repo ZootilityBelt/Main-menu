@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZootilityBelt - Main Menu</title>
-    <meta name="description" content="ZootilityBelt - A collection of zoo and animal management tools">
+    <title>ZootilityBelt - Select Your Tool</title>
+    <meta name="description" content="ZootilityBelt - A collection of zoo and animal management tools. Select your tool on the retro cartridge carousel.">
     <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
     <link rel="icon" type="image/png" sizes="16x16" href="favicon.png">
     <link rel="shortcut icon" type="image/png" href="favicon.png">
@@ -14,92 +14,332 @@
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css" />
     <style>
-        .menu-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 30px;
-            max-width: 1000px;
-            margin: 40px auto;
-            padding: 0 20px;
+        /* =====================================================
+           CAROUSEL LAYOUT
+        ===================================================== */
+        .carousel-section {
+            position: relative;
+            width: 100%;
+            padding: 20px 0 10px;
         }
 
-        .menu-card {
-            background: linear-gradient(135deg, #2a2a4a 0%, #1a1a2e 100%);
-            border: 3px solid #4a4a6a;
-            border-radius: 15px;
-            padding: 25px 20px;
+        .carousel-viewport {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 420px;
+        }
+
+        .carousel-track {
+            position: relative;
+            width: 100%;
+            height: 380px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* =====================================================
+           CARTRIDGE CARDS
+        ===================================================== */
+        .carousel-card {
+            position: absolute;
+            width: 280px;
+            min-height: 340px;
+            background: linear-gradient(145deg, #2a2a4a 0%, #1a1a2e 60%, #0f0f22 100%);
+            border: 3px solid #3a3a5a;
+            border-radius: 18px;
+            padding: 28px 22px 24px;
             text-align: center;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            text-decoration: none;
-            color: inherit;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
             display: flex;
             flex-direction: column;
+            align-items: center;
             justify-content: flex-start;
-            flex: 0 0 calc(50% - 15px);
-            /* Force 2 columns minus gap */
-            max-width: 500px;
-            position: relative;
+            cursor: pointer;
+            user-select: none;
+            text-decoration: none;
+            color: inherit;
+            will-change: transform, opacity;
+            transition:
+                transform 0.55s cubic-bezier(0.34, 1.2, 0.64, 1),
+                opacity   0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                filter    0.45s ease,
+                border-color 0.35s ease,
+                box-shadow 0.35s ease;
+            box-shadow: 0 6px 30px rgba(0,0,0,0.5);
+            outline: none;
         }
 
-        .menu-card:hover {
-            transform: translateY(-5px);
-            border-color: #7a7aaa;
-            box-shadow: 0 8px 25px rgba(100, 100, 200, 0.4);
-            background: linear-gradient(135deg, #3a3a5a 0%, #2a2a3e 100%);
-            z-index: 2;
+        /* Active (center) card */
+        .carousel-card.is-active {
+            border-color: #B19EEF;
+            box-shadow:
+                0 0 0 2px rgba(177,158,239,0.27),
+                0 0 28px rgba(177,158,239,0.4),
+                0 0 60px rgba(177,158,239,0.13),
+                0 12px 40px rgba(0,0,0,0.6);
+            z-index: 10;
         }
 
-        .menu-card h2 {
-            font-family: 'Press Start 2P', cursive;
-            font-size: 0.85rem;
-            color: #fff;
-            margin-bottom: 20px;
-            line-height: 1.8;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        /* Side cards */
+        .carousel-card.is-prev,
+        .carousel-card.is-next {
+            opacity: 0.55;
+            filter: brightness(0.6) saturate(0.7);
+            z-index: 5;
         }
 
-        .menu-card p {
-            font-family: 'VT323', monospace;
-            font-size: 1.2rem;
-            color: #aaa;
-            margin: 0;
-            line-height: 1.4;
+        /* Far/hidden cards */
+        .carousel-card.is-far {
+            opacity: 0;
+            pointer-events: none;
+            z-index: 1;
         }
 
-        .menu-card .icon {
-            width: 80px;
-            height: 80px;
-            margin-bottom: 15px;
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
+        .carousel-card:focus-visible {
+            outline: 3px dashed #B19EEF;
+            outline-offset: 6px;
+        }
+
+        /* Card interior */
+        .card-icon {
+            width: 90px;
+            height: 90px;
             object-fit: contain;
+            margin-bottom: 18px;
+            display: block;
+            image-rendering: pixelated;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.6));
+            transition: filter 0.3s ease;
         }
 
-        .welcome-text {
-            text-align: center;
-            margin: 20px auto 40px;
-            max-width: 700px;
-            padding: 0 20px;
+        .carousel-card.is-active .card-icon {
+            filter: drop-shadow(0 4px 16px rgba(177,158,239,0.53));
         }
 
-        .welcome-text p {
+        .card-title {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.72rem;
+            color: #fff;
+            margin: 0 0 14px 0;
+            line-height: 1.9;
+            text-shadow: 2px 2px 0px #000;
+        }
+
+        .card-desc {
             font-family: 'VT323', monospace;
-            font-size: 1.5rem;
-            color: #ccc;
-            line-height: 1.5;
+            font-size: 1.25rem;
+            color: #9090b8;
+            margin: 0;
+            line-height: 1.45;
+            flex: 1;
         }
 
-        /* Pixel Art Header Styles */
+        .carousel-card.is-active .card-desc {
+            color: #b8b8e0;
+        }
+
+        /* Launch label */
+        .card-launch-hint {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.5rem;
+            color: #B19EEF;
+            margin-top: 16px;
+            letter-spacing: 1px;
+            opacity: 0;
+            transform: translateY(4px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .carousel-card.is-active .card-launch-hint {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* =====================================================
+           TARGETING RETICLE  (corner brackets)
+        ===================================================== */
+        .reticle {
+            position: absolute;
+            inset: -10px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            border-radius: 20px;
+        }
+
+        .carousel-card.is-active .reticle {
+            opacity: 1;
+        }
+
+        .reticle::before,
+        .reticle::after,
+        .reticle .reticle-bl,
+        .reticle .reticle-br {
+            content: '';
+            position: absolute;
+            width: 22px;
+            height: 22px;
+            border-color: #B19EEF;
+            border-style: solid;
+            animation: reticle-pulse 1.5s ease-in-out infinite;
+        }
+
+        /* Top-left */
+        .reticle::before {
+            top: 0; left: 0;
+            border-width: 3px 0 0 3px;
+            border-radius: 4px 0 0 0;
+        }
+        /* Top-right */
+        .reticle::after {
+            top: 0; right: 0;
+            border-width: 3px 3px 0 0;
+            border-radius: 0 4px 0 0;
+            animation-delay: 0.2s;
+        }
+        /* Bottom-left */
+        .reticle .reticle-bl {
+            bottom: 0; left: 0;
+            border-width: 0 0 3px 3px;
+            border-radius: 0 0 0 4px;
+            animation-delay: 0.4s;
+        }
+        /* Bottom-right */
+        .reticle .reticle-br {
+            bottom: 0; right: 0;
+            border-width: 0 3px 3px 0;
+            border-radius: 0 0 4px 0;
+            animation-delay: 0.6s;
+        }
+
+        @keyframes reticle-pulse {
+            0%, 100% { opacity: 1; box-shadow: 0 0 6px rgba(177,158,239,0.53); }
+            50%       { opacity: 0.4; box-shadow: 0 0 14px rgba(177,158,239,0.8); }
+        }
+
+        /* =====================================================
+           NAVIGATION BUTTONS (arcade style)
+        ===================================================== */
+        .carousel-nav {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 24px;
+            margin-top: 18px;
+        }
+
+        .nav-btn {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 1.1rem;
+            background: linear-gradient(145deg, #2a2a4a, #1a1a2e);
+            border: 3px solid #4a4a6a;
+            border-radius: 50%;
+            color: #B19EEF;
+            width: 52px;
+            height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            box-shadow:
+                0 4px 0 #0d0d1e,
+                0 6px 16px rgba(0,0,0,0.4);
+            user-select: none;
+            outline: none;
+        }
+
+        .nav-btn:hover {
+            border-color: #B19EEF;
+            color: #fff;
+            background: linear-gradient(145deg, #3a3a5a, #2a2a4a);
+            box-shadow:
+                0 4px 0 #0d0d1e,
+                0 6px 20px rgba(177,158,239,0.27);
+            transform: translateY(-2px);
+        }
+
+        .nav-btn:active {
+            transform: translateY(2px);
+            box-shadow:
+                0 1px 0 #0d0d1e,
+                0 2px 8px rgba(0,0,0,0.3);
+        }
+
+        .nav-btn:focus-visible {
+            outline: 2px dashed #B19EEF;
+            outline-offset: 4px;
+        }
+
+        /* =====================================================
+           DOT INDICATORS
+        ===================================================== */
+        .carousel-dots {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 2px;
+            background: #2a2a4a;
+            border: 2px solid #4a4a6a;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            padding: 0;
+        }
+
+        .dot.is-active {
+            border-color: #B19EEF;
+            background: #B19EEF;
+            box-shadow: 0 0 10px rgba(177,158,239,0.6);
+            transform: scale(1.3);
+        }
+
+        .dot:hover:not(.is-active) {
+            border-color: #7a6aaf;
+            background: #3a3a5a;
+        }
+
+        .dot:focus-visible {
+            outline: 2px dashed #B19EEF;
+            outline-offset: 3px;
+        }
+
+        /* =====================================================
+           HINT TEXT
+        ===================================================== */
+        .carousel-hint {
+            text-align: center;
+            margin-top: 16px;
+            font-family: 'VT323', monospace;
+            font-size: 1.1rem;
+            color: #5a5a7a;
+            letter-spacing: 1.5px;
+            animation: hint-blink 2.2s ease-in-out infinite;
+        }
+
+        @keyframes hint-blink {
+            0%, 100% { opacity: 0.7; }
+            50%       { opacity: 0.2; }
+        }
+
+        /* =====================================================
+           PIXEL HEADER
+        ===================================================== */
         .pixel-header {
             text-align: center;
-            padding: 30px 20px;
-            margin-bottom: 20px;
+            padding: 30px 20px 20px;
+            margin-bottom: 10px;
             background: linear-gradient(180deg, #1a1a3a 0%, transparent 100%);
-            border-bottom: 4px solid #4a4a6a;
+            border-bottom: 4px solid #2a2a4a;
             image-rendering: pixelated;
         }
 
@@ -112,11 +352,10 @@
         }
 
         .pixel-header .header-icon {
-            width: 150px;
-            height: 150px;
+            width: 130px;
+            height: 130px;
             image-rendering: pixelated;
-            filter: drop-shadow(4px 4px 0px rgba(0, 0, 0, 0.5));
-            margin-right: 10px;
+            filter: drop-shadow(4px 4px 0px rgba(0,0,0,0.5));
         }
 
         .pixel-header h1 {
@@ -137,153 +376,382 @@
             font-family: 'VT323', monospace;
             font-size: 1.5rem;
             color: #8a8aaa;
-            margin-top: 15px;
+            margin-top: 14px;
             text-shadow: 2px 2px 0px #000;
         }
 
-        /* Responsive Header and Menu */
-        @media (max-width: 800px) {
-            .menu-container {
-                gap: 20px;
-                padding: 0 15px;
-            }
+        /* =====================================================
+           WELCOME TEXT
+        ===================================================== */
+        .welcome-text {
+            text-align: center;
+            margin: 8px auto 16px;
+            max-width: 600px;
+            padding: 0 20px;
+        }
 
-            .menu-card {
-                flex: 0 0 100%;
-                /* Force 1 column */
-                max-width: 100%;
-                flex-direction: row;
-                align-items: center;
-                text-align: left;
-                padding: 20px;
-            }
+        .welcome-text p {
+            font-family: 'VT323', monospace;
+            font-size: 1.4rem;
+            color: #777;
+            line-height: 1.5;
+            margin: 0;
+        }
 
-            .menu-card .icon {
-                margin: 0 20px 0 0;
-                width: 70px;
-                height: 70px;
+        /* =====================================================
+           RESPONSIVE
+        ===================================================== */
+        @media (max-width: 768px) {
+            .carousel-card {
+                width: 240px;
+                min-height: 300px;
+                padding: 22px 18px 20px;
             }
-
-            .menu-card h2 {
-                margin-bottom: 5px;
-                font-size: 0.8rem;
-            }
-
-            .menu-card p {
-                font-size: 1.1rem;
-            }
-
-            .pixel-header h1 {
-                font-size: 1.3rem;
-            }
-
-            .pixel-header .header-icon {
-                width: 120px;
-                height: 120px;
-            }
-
-            .pixel-header .subtitle {
-                font-size: 1.2rem;
-            }
+            .card-icon { width: 72px; height: 72px; }
+            .card-title { font-size: 0.62rem; }
+            .carousel-track { height: 330px; }
+            .carousel-viewport { min-height: 360px; }
+            .pixel-header h1 { font-size: 1.3rem; }
+            .pixel-header .header-icon { width: 100px; height: 100px; }
         }
 
         @media (max-width: 480px) {
-            .pixel-header .header-content {
-                flex-direction: column;
-                gap: 15px;
+            .carousel-card {
+                width: 200px;
+                min-height: 280px;
+                padding: 18px 14px 16px;
             }
-
-            .menu-container {
-                max-width: 100%;
-            }
-
-            .pixel-header h1 {
-                text-align: center;
-                font-size: 1rem;
-            }
-
-            .pixel-header .header-content {
-                flex-direction: column;
-                text-align: center;
-
-            }
-
-            .menu-card {
-                flex-direction: column;
-                text-align: center;
-                padding: 20px 15px;
-            }
-
-            .menu-card .icon {
-                margin: 0 auto 15px auto;
-            }
-
-            .pixel-header .header-icon {
-                width: 100px;
-                height: 100px;
-            }
-
-            .pixel-header .subtitle {
-                font-size: 1rem;
-            }
+            .card-icon { width: 60px; height: 60px; }
+            .card-title { font-size: 0.55rem; }
+            .card-desc { font-size: 1.1rem; }
+            .carousel-track { height: 300px; }
+            .carousel-viewport { min-height: 330px; }
+            .pixel-header h1 { font-size: 1rem; }
+            .pixel-header .header-content { flex-direction: column; gap: 12px; }
+            .pixel-header .header-icon { width: 80px; height: 80px; }
+            .pixel-header .subtitle { font-size: 1.1rem; }
+            .nav-btn { width: 44px; height: 44px; font-size: 0.9rem; }
+            .carousel-hint { font-size: 0.95rem; }
         }
     </style>
 </head>
 
 <body>
-    <!-- Animated Dot Grid Background -->
-    <div id="dot-grid-bg" class="dot-grid"></div>
+    <!-- WebGL Particle Background -->
+    <div id="pixel-blast" class="pixel-blast-container"
+        style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;"></div>
 
     <div class="container">
-        <!-- Pixel Art Header -->
+        <!-- Header -->
         <header class="pixel-header">
             <div class="header-content">
                 <img src="headericon.png" alt="ZootilityBelt Icon" class="header-icon">
                 <h1>ZootilityBelt</h1>
             </div>
-            <p class="subtitle">Zoo & Animal Management Tools</p>
+            <p class="subtitle">Zoo &amp; Animal Management Tools</p>
         </header>
 
-        <div class="menu-container">
-            <a href="earnotchID-generator/index.html" class="menu-card">
-                <img src="earnotch.png" alt="Ear Notch" class="icon">
-                <h2>Ear Notch Generator</h2>
-                <p>Generate ear notch patterns based on internal ID numbers for hoofstock identification.</p>
-            </a>
-
-            <a href="reptile-energy-calculator/index.html" class="menu-card">
-                <img src="reptile.png" alt="Reptile" class="icon">
-                <h2>Reptile Energy Calculator</h2>
-                <p>Calculate energy requirements and feeding schedules for reptiles.</p>
-            </a>
-
-            <a href="reptile-zone/index.html" class="menu-card">
-                <img src="reptile-zone.png" alt="Reptile Zone" class="icon">
-                <h2>Ferguson Zone Finder</h2>
-                <p>Find the Ferguson Zone and UV requirements for reptile species.</p>
-            </a>
-
-            <a href="Enrichment-randomizer/index.html" class="menu-card">
-                <img src="randomizer.png" alt="Randomizer" class="icon">
-                <h2>Enrichment Randomizer</h2>
-                <p>Create randomized weekly and daily enrichment schedules for zoo animals.</p>
-            </a>
-
-            <a href="qba-scoring/index.html" class="menu-card">
-                <img src="qba.png" alt="QBA Scoring" class="icon" style="border-radius: 15px;">
-                <h2>QBA Scoring Tool</h2>
-                <p>Qualitative Behaviour Assessment for evaluating animal emotional expression.</p>
-            </a>
+        <div class="welcome-text">
+            <p>Select your tool and press ENTER to launch.</p>
         </div>
 
+        <!-- ====== CAROUSEL SECTION ====== -->
+        <section class="carousel-section" aria-label="Tool selection carousel">
+
+            <div class="carousel-viewport" id="carouselViewport">
+                <div class="carousel-track" id="carouselTrack" role="listbox" aria-label="Available tools">
+                    <!-- Cards injected by JS -->
+                </div>
+            </div>
+
+            <!-- Navigation buttons -->
+            <nav class="carousel-nav" aria-label="Carousel navigation">
+                <button class="nav-btn" id="btnPrev" aria-label="Previous tool" title="Previous (Arrow Left)">&#9664;</button>
+                <div class="carousel-dots" id="carouselDots" role="tablist" aria-label="Jump to tool"></div>
+                <button class="nav-btn" id="btnNext" aria-label="Next tool" title="Next (Arrow Right)">&#9654;</button>
+            </nav>
+
+            <!-- Hint text -->
+            <p class="carousel-hint" aria-hidden="true">&#9668; &#9658; TO BROWSE &nbsp;&middot;&nbsp; ENTER TO SELECT</p>
+
+        </section>
+
         <footer class="site-footer">
-            <p>
-                © 2025 ZootilityBelt &middot; Developed by Abdul Fattah
-            </p>
+            <p>&copy; 2025 ZootilityBelt &middot; Developed by Abdul Fattah</p>
         </footer>
     </div>
 
+    <!-- Three.js + postprocessing for WebGL bg -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/postprocessing@6.34.1/build/postprocessing.min.js"></script>
     <script src="script.js"></script>
+
+    <!-- ================================================================
+         CAROUSEL ENGINE
+    ================================================================ -->
+    <script>
+    (function () {
+        'use strict';
+
+        /* ============================================================
+           DATA — one entry per tool
+        ============================================================ */
+        var TOOLS = [
+            {
+                title: 'Ear Notch Generator',
+                desc: 'Generate ear notch patterns based on internal ID numbers for hoofstock identification.',
+                icon: 'earnotch.png',
+                href: 'earnotchID-generator/index.html'
+            },
+            {
+                title: 'Reptile Energy Calculator',
+                desc: 'Calculate energy requirements and feeding schedules for reptiles.',
+                icon: 'reptile.png',
+                href: 'reptile-energy-calculator/index.html'
+            },
+            {
+                title: 'Ferguson Zone Finder',
+                desc: 'Find the Ferguson Zone and UV requirements for reptile species.',
+                icon: 'reptile-zone.png',
+                href: 'reptile-zone/index.html'
+            },
+            {
+                title: 'Enrichment Randomizer',
+                desc: 'Create randomized weekly and daily enrichment schedules for zoo animals.',
+                icon: 'randomizer.png',
+                href: 'Enrichment-randomizer/index.html'
+            },
+            {
+                title: 'QBA Scoring Tool',
+                desc: 'Qualitative Behaviour Assessment for evaluating animal emotional expression.',
+                icon: 'qba.png',
+                href: 'qba-scoring/index.html',
+                iconStyle: 'border-radius:12px;'
+            },
+            {
+                title: 'Enrichment Scoring Tool',
+                desc: 'Score enrichment sessions using WildThink\'s Behavior & Activity Rating method.',
+                icon: 'Enrichment-scoring-tool.png',
+                href: 'enrichment-scoring/index.html'
+            }
+        ];
+
+        /* ============================================================
+           STATE
+        ============================================================ */
+        var activeIndex = 0;
+        var isAnimating = false;
+        var ANIM_LOCK_MS = 420;
+
+        /* ============================================================
+           DOM
+        ============================================================ */
+        var track        = document.getElementById('carouselTrack');
+        var dotsContainer = document.getElementById('carouselDots');
+        var btnPrev      = document.getElementById('btnPrev');
+        var btnNext      = document.getElementById('btnNext');
+
+        var cards = [];
+        var dots  = [];
+
+        /* ============================================================
+           BUILD CARDS + DOTS
+        ============================================================ */
+        TOOLS.forEach(function (tool, i) {
+            /* Card */
+            var card = document.createElement('a');
+            card.className = 'carousel-card';
+            card.href = tool.href;
+            card.setAttribute('role', 'option');
+            card.setAttribute('aria-selected', i === 0 ? 'true' : 'false');
+            card.setAttribute('aria-label', tool.title);
+            card.setAttribute('tabindex', i === 0 ? '0' : '-1');
+            card.id = 'carousel-card-' + i;
+
+            var iconStyle = tool.iconStyle ? ' style="' + tool.iconStyle + '"' : '';
+            card.innerHTML =
+                '<div class="reticle">' +
+                    '<span class="reticle-bl"></span>' +
+                    '<span class="reticle-br"></span>' +
+                '</div>' +
+                '<img src="' + tool.icon + '" alt="' + tool.title + ' icon" class="card-icon"' + iconStyle + '>' +
+                '<h2 class="card-title">' + tool.title + '</h2>' +
+                '<p class="card-desc">' + tool.desc + '</p>' +
+                '<span class="card-launch-hint">&#9658; LAUNCH</span>';
+
+            /* Click: centre first, launch when already centred */
+            (function (index) {
+                card.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    if (card.classList.contains('is-active')) {
+                        window.location.href = tool.href;
+                    } else {
+                        goTo(index);
+                    }
+                });
+            }(i));
+
+            track.appendChild(card);
+            cards.push(card);
+
+            /* Dot */
+            var dot = document.createElement('button');
+            dot.className = 'dot';
+            dot.setAttribute('role', 'tab');
+            dot.setAttribute('aria-label', 'Jump to ' + tool.title);
+            dot.setAttribute('aria-selected', i === 0 ? 'true' : 'false');
+            dot.setAttribute('tabindex', i === 0 ? '0' : '-1');
+            (function (index) {
+                dot.addEventListener('click', function () { goTo(index); });
+            }(i));
+            dotsContainer.appendChild(dot);
+            dots.push(dot);
+        });
+
+        /* ============================================================
+           SLOT POSITIONS — computed from viewport width
+        ============================================================ */
+        function getSlots() {
+            var vw   = window.innerWidth;
+            var cw   = vw <= 480 ? 200 : vw <= 768 ? 240 : 280;
+            var gap  = vw <= 480 ? 24  : vw <= 768 ? 32  : 46;
+            var step = cw + gap;
+            return [
+                { x: -step * 2.1, scale: 0.68, opacity: 0,    zIndex: 1, far: true  },
+                { x: -step,       scale: 0.82, opacity: 0.55,  zIndex: 5, far: false },
+                { x: 0,           scale: 1,    opacity: 1,     zIndex: 10, far: false },
+                { x:  step,       scale: 0.82, opacity: 0.55,  zIndex: 5, far: false },
+                { x:  step * 2.1, scale: 0.68, opacity: 0,    zIndex: 1, far: true  }
+            ];
+        }
+
+        /* ============================================================
+           RENDER
+        ============================================================ */
+        function render() {
+            var n = TOOLS.length;
+            var slots = getSlots();
+
+            cards.forEach(function (card, i) {
+                var rel = i - activeIndex;
+                if (rel >  n / 2) rel -= n;
+                if (rel < -n / 2) rel += n;
+
+                var slotIdx = Math.max(0, Math.min(4, rel + 2));
+                var s = slots[slotIdx];
+
+                var isActive = rel === 0;
+                var isPrev   = rel === -1;
+                var isNext   = rel === 1;
+                var isFar    = Math.abs(rel) >= 2;
+
+                card.classList.toggle('is-active', isActive);
+                card.classList.toggle('is-prev',   isPrev);
+                card.classList.toggle('is-next',   isNext);
+                card.classList.toggle('is-far',    isFar);
+
+                card.style.transform     = 'translateX(' + s.x + 'px) scale(' + s.scale + ')';
+                card.style.opacity       = String(s.opacity);
+                card.style.zIndex        = String(s.zIndex);
+                card.style.filter        = isFar ? 'blur(4px) brightness(0.4) saturate(0.5)' : '';
+                card.style.pointerEvents = isFar ? 'none' : 'auto';
+
+                card.setAttribute('aria-selected', isActive ? 'true' : 'false');
+                card.setAttribute('tabindex', isActive ? '0' : '-1');
+            });
+
+            dots.forEach(function (dot, i) {
+                dot.classList.toggle('is-active', i === activeIndex);
+                dot.setAttribute('aria-selected', i === activeIndex ? 'true' : 'false');
+                dot.setAttribute('tabindex', i === activeIndex ? '0' : '-1');
+            });
+        }
+
+        /* ============================================================
+           NAVIGATE
+        ============================================================ */
+        function goTo(index) {
+            if (isAnimating) return;
+            isAnimating = true;
+            activeIndex = ((index % TOOLS.length) + TOOLS.length) % TOOLS.length;
+            render();
+            setTimeout(function () { isAnimating = false; }, ANIM_LOCK_MS);
+            cards[activeIndex].focus({ preventScroll: true });
+        }
+
+        function prev() { goTo(activeIndex - 1); }
+        function next() { goTo(activeIndex + 1); }
+
+        /* ============================================================
+           BUTTON EVENTS
+        ============================================================ */
+        btnPrev.addEventListener('click', prev);
+        btnNext.addEventListener('click', next);
+
+        /* ============================================================
+           KEYBOARD
+        ============================================================ */
+        document.addEventListener('keydown', function (e) {
+            switch (e.key) {
+                case 'ArrowLeft':
+                case 'ArrowUp':
+                    e.preventDefault();
+                    prev();
+                    break;
+                case 'ArrowRight':
+                case 'ArrowDown':
+                    e.preventDefault();
+                    next();
+                    break;
+                case 'Enter':
+                case ' ':
+                    e.preventDefault();
+                    window.location.href = TOOLS[activeIndex].href;
+                    break;
+            }
+        });
+
+        /* ============================================================
+           TOUCH / SWIPE
+        ============================================================ */
+        var touchStartX = 0;
+        var touchStartY = 0;
+        var SWIPE_THRESHOLD = 40;
+        var viewport = document.getElementById('carouselViewport');
+
+        viewport.addEventListener('touchstart', function (e) {
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
+        }, { passive: true });
+
+        viewport.addEventListener('touchend', function (e) {
+            var dx = e.changedTouches[0].clientX - touchStartX;
+            var dy = e.changedTouches[0].clientY - touchStartY;
+            if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > SWIPE_THRESHOLD) {
+                if (dx < 0) { next(); } else { prev(); }
+            }
+        }, { passive: true });
+
+        /* ============================================================
+           RESIZE — snap layout without animation
+        ============================================================ */
+        var resizeTimer;
+        window.addEventListener('resize', function () {
+            clearTimeout(resizeTimer);
+            cards.forEach(function (c) { c.style.transition = 'none'; });
+            render();
+            resizeTimer = setTimeout(function () {
+                cards.forEach(function (c) { c.style.transition = ''; });
+            }, 100);
+        });
+
+        /* ============================================================
+           INITIAL RENDER
+        ============================================================ */
+        render();
+
+    }());
+    </script>
 </body>
 
 </html>

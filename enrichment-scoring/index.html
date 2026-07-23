@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Enrichment Scoring Tool – ZootilityBelt</title>
+  <meta name="description" content="Score animal enrichment sessions using WildThink's Behavior and Activity Rating method, styled as a video-game RPG stat screen." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Design Tokens ── */
+    :root {
+      --bg:      #0b0b1a;
+      --surface: #13132a;
+      --surf2:   #1c1c38;
+      --border:  #2e2e54;
+      --accent:  #B19EEF;
+      --green:   #7EDBA0;
+      --orange:  #F9A94B;
+      --red:     #F06080;
+      --blue:    #60b8f0;
+      --text:    #e8e8f8;
+      --muted:   #7878a8;
+      --white:   #ffffff;
+      --font-g:  'Press Start 2P', cursive;
+      --font-m:  'VT323', monospace;
+      --font-b:  'Inter', sans-serif;
+      --r:       12px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-b);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(177,158,239,.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(177,158,239,.03) 1px, transparent 1px);
+      background-size: 32px 32px;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .scanlines {
+      position: fixed; inset: 0;
+      background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,.07) 2px, rgba(0,0,0,.07) 4px);
+      pointer-events: none;
+      z-index: 999;
+    }
+    .wrap {
+      position: relative; z-index: 1;
+      max-width: 900px; margin: 0 auto;
+      padding: 0 16px 80px;
+    }
+
+    /* ── Header ── */
+    .pg-header {
+      text-align: center;
+      padding: 32px 20px 24px;
+      border-bottom: 3px solid var(--border);
+      margin-bottom: 28px;
+    }
+    .hdr-inner {
+      display: flex; align-items: center; justify-content: center;
+      gap: 18px; flex-wrap: wrap;
+    }
+    .hdr-icon {
+      width: 80px; height: 80px;
+      object-fit: contain; image-rendering: pixelated;
+      filter: drop-shadow(0 4px 14px rgba(177,158,239,.55));
+    }
+    .hdr-title {
+      font-family: var(--font-g);
+      font-size: clamp(.72rem, 2.3vw, 1.05rem);
+      color: var(--white);
+      text-shadow: 3px 3px 0 #000;
+      line-height: 1.75; letter-spacing: 1px;
+    }
+    .hdr-sub {
+      font-family: var(--font-m);
+      font-size: 1.3rem; color: var(--muted);
+      margin-top: 6px;
+    }
+    .back-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      margin-top: 14px;
+      font-family: var(--font-g); font-size: .45rem;
+      color: var(--muted); text-decoration: none;
+      letter-spacing: 1px; transition: color .2s;
+    }
+    .back-link:hover { color: var(--accent); }
+
+    /* ── Section title ── */
+    .sec-title {
+      font-family: var(--font-g); font-size: .58rem;
+      color: var(--accent); letter-spacing: 2px;
+      margin-bottom: 16px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .sec-title::after {
+      content: ''; flex: 1; height: 2px;
+      background: linear-gradient(90deg, var(--border), transparent);
+    }
+
+    /* ── Card ── */
+    .card {
+      background: var(--surface);
+      border: 2px solid var(--border);
+      border-radius: var(--r);
+      padding: 24px; margin-bottom: 24px;
+      position: relative;
+    }
+    .card::before {
+      content: ''; position: absolute;
+      top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--accent), transparent);
+      border-radius: var(--r) var(--r) 0 0;
+    }
+
+    /* Corner brackets */
+    .cb { position: absolute; width: 16px; height: 16px; border-color: var(--accent); border-style: solid; opacity: .38; }
+    .cb-tl { top: 6px; left: 6px; border-width: 2px 0 0 2px; }
+    .cb-tr { top: 6px; right: 6px; border-width: 2px 2px 0 0; }
+    .cb-bl { bottom: 6px; left: 6px; border-width: 0 0 2px 2px; }
+    .cb-br { bottom: 6px; right: 6px; border-width: 0 2px 2px 0; }
+
+    /* ── Form ── */
+    .fg { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .fg .s2 { grid-column: 1 / -1; }
+    .fl { display: flex; flex-direction: column; gap: 6px; }
+    .fl label { font-family: var(--font-m); font-size: 1.05rem; color: var(--muted); }
+    input[type=text], input[type=date], input[type=time], input[type=number], textarea, select {
+      background: var(--surf2); border: 2px solid var(--border);
+      border-radius: 8px; color: var(--text);
+      font-family: var(--font-b); font-size: .95rem;
+      padding: 10px 13px; outline: none; width: 100%;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    input:focus, textarea:focus, select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(177,158,239,.15);
+    }
+    select option { background: var(--surf2); }
+    textarea { resize: vertical; min-height: 80px; }
+
+    /* ── Photo upload ── */
+    .upload-zone {
+      border: 2px dashed var(--border); border-radius: var(--r);
+      padding: 24px; text-align: center; cursor: pointer;
+      position: relative; transition: border-color .2s, background .2s;
+    }
+    .upload-zone:hover, .upload-zone.drag-over {
+      border-color: var(--accent);
+      background: rgba(177,158,239,.05);
+    }
+    .upload-zone input[type=file] {
+      position: absolute; inset: 0; opacity: 0;
+      cursor: pointer; width: 100%; height: 100%;
+    }
+    .upload-icon { font-size: 2rem; margin-bottom: 8px; }
+    .upload-lbl { font-family: var(--font-m); font-size: 1.1rem; color: var(--muted); }
+    .photo-prev { display: none; margin-top: 12px; position: relative; }
+    .photo-prev img {
+      max-width: 100%; max-height: 240px; border-radius: 8px;
+      border: 2px solid var(--border); object-fit: contain;
+    }
+    .rm-photo {
+      position: absolute; top: 4px; right: 4px;
+      background: var(--red); color: #fff;
+      border: none; border-radius: 50%;
+      width: 26px; height: 26px;
+      cursor: pointer; font-size: .8rem;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* ── Category cards ── */
+    .cat-card {
+      background: var(--surface); border: 2px solid var(--border);
+      border-radius: var(--r); margin-bottom: 20px; overflow: hidden;
+      transition: border-color .3s;
+    }
+    .cat-card.scored { border-color: var(--accent); }
+    .cat-hdr {
+      display: flex; align-items: center; gap: 14px;
+      padding: 14px 20px;
+      background: var(--surf2); border-bottom: 2px solid var(--border);
+    }
+    .cat-ico { font-size: 1.6rem; width: 42px; text-align: center; flex-shrink: 0; }
+    .cat-lbl {
+      font-family: var(--font-g); font-size: .52rem;
+      color: var(--white); line-height: 1.8; flex: 1;
+    }
+    .cat-badge {
+      font-family: var(--font-g); font-size: .52rem;
+      padding: 4px 10px; border-radius: 20px;
+      background: var(--surface); border: 2px solid var(--border);
+      color: var(--muted); transition: all .3s; white-space: nowrap;
+    }
+    .cat-card.scored .cat-badge {
+      background: var(--accent); border-color: var(--accent); color: var(--bg);
+    }
+
+    /* Rating options */
+    .rating-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 10px; padding: 14px;
+    }
+    .ro { position: relative; }
+    .ro input[type=radio] { position: absolute; opacity: 0; width: 0; height: 0; }
+    .ro label {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 12px 14px;
+      background: var(--surf2); border: 2px solid var(--border);
+      border-radius: 10px; cursor: pointer; min-height: 72px; width: 100%;
+      transition: all .2s;
+    }
+    .ro label:hover { border-color: var(--accent); background: rgba(177,158,239,.07); }
+    .ro input:checked + label {
+      border-color: var(--accent);
+      background: rgba(177,158,239,.13);
+      box-shadow: 0 0 18px rgba(177,158,239,.35);
+    }
+    .pip {
+      flex-shrink: 0; width: 36px; height: 36px;
+      border-radius: 8px; display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-g); font-size: .8rem; border: 2px solid;
+      transition: all .2s;
+    }
+    .p0 { background: rgba(240,96,128,.15); border-color: var(--red);    color: var(--red);    }
+    .p1 { background: rgba(249,169,75,.15);  border-color: var(--orange); color: var(--orange); }
+    .p2 { background: rgba(96,184,240,.15);  border-color: var(--blue);   color: var(--blue);   }
+    .p3 { background: rgba(126,219,160,.15); border-color: var(--green);  color: var(--green);  }
+    .ro input:checked + label .p0 { background: var(--red);    color: var(--bg); }
+    .ro input:checked + label .p1 { background: var(--orange); color: var(--bg); }
+    .ro input:checked + label .p2 { background: var(--blue);   color: var(--bg); }
+    .ro input:checked + label .p3 { background: var(--green);  color: var(--bg); }
+
+    .rt { flex: 1; }
+    .rt-title { font-family: var(--font-m); font-size: 1.05rem; color: var(--text); font-weight: 600; line-height: 1.3; }
+    .rt-desc { font-size: .78rem; color: var(--muted); margin-top: 3px; line-height: 1.4; }
+
+    /* XP bar */
+    .xp-row {
+      display: flex; align-items: center; gap: 10px;
+      padding: 6px 14px 14px;
+    }
+    .xp-lbl { font-family: var(--font-m); font-size: .92rem; color: var(--muted); white-space: nowrap; }
+    .xp-bar {
+      flex: 1; height: 8px; background: var(--surf2);
+      border-radius: 4px; border: 1px solid var(--border); overflow: hidden;
+    }
+    .xp-fill {
+      height: 100%; border-radius: 4px; width: 0%;
+      transition: width .65s cubic-bezier(.34,1.2,.64,1);
+    }
+    .xf0 { background: var(--red); }
+    .xf1 { background: var(--orange); }
+    .xf2 { background: var(--blue); }
+    .xf3 { background: var(--green); }
+
+    /* ── Buttons ── */
+    .btn {
+      font-family: var(--font-g); font-size: .52rem;
+      letter-spacing: 1px; padding: 14px 26px;
+      border: 3px solid; border-radius: 8px; cursor: pointer;
+      display: inline-flex; align-items: center; gap: 8px;
+      transition: all .15s; text-transform: uppercase;
+    }
+    .btn:active { transform: translateY(3px); }
+    .btn-score {
+      background: var(--accent); border-color: #7a5ab0; color: var(--bg);
+      box-shadow: 0 4px 0 #3a2a60;
+    }
+    .btn-score:hover { background: #c8b8ff; transform: translateY(-2px); }
+    .btn-print {
+      background: var(--surf2); border-color: var(--border); color: var(--green);
+      box-shadow: 0 4px 0 #0a0a15;
+    }
+    .btn-print:hover { border-color: var(--green); transform: translateY(-2px); }
+    .btn-reset {
+      background: transparent; border-color: var(--border);
+      color: var(--muted); box-shadow: none;
+    }
+    .btn-reset:hover { border-color: var(--muted); color: var(--text); }
+    .btn-row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; justify-content: center; margin-top: 8px; }
+
+    /* Error */
+    .err-msg {
+      font-family: var(--font-m); font-size: 1rem;
+      color: var(--red); text-align: center;
+      margin-top: 10px; display: none;
+    }
+    .err-msg.show { display: block; animation: shake .4s ease; }
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      20%,60%  { transform: translateX(-6px); }
+      40%,80%  { transform: translateX(6px); }
+    }
+
+    /* ── Results ── */
+    #results { display: none; }
+    #results.on { display: block; }
+    .results-screen {
+      border: 3px solid var(--accent); border-radius: var(--r); overflow: hidden;
+      box-shadow: 0 0 40px rgba(177,158,239,.18);
+      animation: pop .55s cubic-bezier(.34,1.2,.64,1) forwards;
+    }
+    @keyframes pop {
+      from { opacity: 0; transform: scale(.92) translateY(16px); }
+      to   { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .res-hdr {
+      background: linear-gradient(135deg, #1a1a3a, #0d0d20);
+      padding: 24px; text-align: center;
+      border-bottom: 3px solid var(--accent);
+    }
+    .res-hdr::before {
+      content: '★ SCORE COMPLETE ★';
+      font-family: var(--font-g); font-size: .4rem;
+      color: var(--accent); letter-spacing: 3px;
+      display: block; margin-bottom: 16px;
+      animation: blink 1.8s steps(1) infinite;
+    }
+    @keyframes blink { 0%,49%{opacity:1} 50%,100%{opacity:.2} }
+
+    .final-row { display: flex; align-items: center; justify-content: center; gap: 22px; flex-wrap: wrap; }
+
+    .orb {
+      width: 100px; height: 100px; border-radius: 50%;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      border: 4px solid; box-shadow: 0 0 30px currentColor;
+      font-family: var(--font-g);
+    }
+    .orb-n { font-size: 2.2rem; line-height: 1; }
+    .orb-l { font-size: .36rem; margin-top: 4px; opacity: .8; }
+    .orb.rk0 { color: var(--red);    background: rgba(240,96,128,.12);  border-color: var(--red);    }
+    .orb.rk1 { color: var(--orange); background: rgba(249,169,75,.12);  border-color: var(--orange); }
+    .orb.rk2 { color: var(--blue);   background: rgba(96,184,240,.12);  border-color: var(--blue);   }
+    .orb.rk3 { color: var(--green);  background: rgba(126,219,160,.12); border-color: var(--green);  }
+
+    .badge-area { text-align: left; }
+    .rbadge {
+      font-family: var(--font-g); font-size: clamp(.45rem,1.8vw,.7rem);
+      padding: 8px 16px; border-radius: 30px;
+      border: 3px solid; display: inline-block;
+      margin-bottom: 10px; letter-spacing: 1px;
+    }
+    .rbadge.rk0 { background: rgba(240,96,128,.2);  border-color: var(--red);    color: var(--red);    }
+    .rbadge.rk1 { background: rgba(249,169,75,.2);  border-color: var(--orange); color: var(--orange); }
+    .rbadge.rk2 { background: rgba(96,184,240,.2);  border-color: var(--blue);   color: var(--blue);   }
+    .rbadge.rk3 { background: rgba(126,219,160,.2); border-color: var(--green);  color: var(--green);  }
+    .rank-rec { font-size: .95rem; color: var(--text); max-width: 340px; line-height: 1.55; }
+
+    /* Photo + session */
+    .res-photo-row {
+      display: flex; align-items: flex-start; gap: 16px;
+      padding: 16px 20px; border-bottom: 2px solid var(--border);
+    }
+    .res-photo {
+      width: 140px; height: 110px;
+      border-radius: 8px; border: 2px solid var(--border);
+      object-fit: cover; flex-shrink: 0;
+    }
+    .si-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 14px; flex: 1; }
+    .si-row { display: flex; flex-direction: column; gap: 2px; }
+    .si-lbl { font-family: var(--font-m); font-size: .88rem; color: var(--muted); }
+    .si-val { font-size: .88rem; color: var(--text); font-weight: 600; }
+
+    /* Tally */
+    .tally {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 12px; padding: 18px; background: var(--surf2);
+      border-bottom: 2px solid var(--border);
+    }
+    .titem {
+      background: var(--surface); border: 2px solid var(--border);
+      border-radius: 10px; padding: 13px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .tico { font-size: 1.35rem; flex-shrink: 0; }
+    .tcon { flex: 1; }
+    .tcat { font-family: var(--font-m); font-size: .9rem; color: var(--muted); }
+    .tsbar { display: flex; align-items: center; gap: 8px; margin-top: 4px; }
+    .tpips { display: flex; gap: 4px; }
+    .tpip {
+      width: 14px; height: 14px; border-radius: 3px;
+      border: 2px solid var(--border); background: var(--surf2);
+      transition: all .4s;
+    }
+    .tpip.on { border-color: currentColor; background: currentColor; }
+    .tnum { font-family: var(--font-g); font-size: .6rem; }
+
+    /* Disclaimer */
+    .disc {
+      background: var(--surf2); border: 2px solid var(--border);
+      border-radius: var(--r); padding: 14px 18px;
+      margin-top: 20px; font-size: .8rem;
+      color: var(--muted); line-height: 1.6;
+    }
+    .disc a { color: var(--green); }
+    .disc strong { color: var(--text); }
+
+    /* ── Print ── */
+    @media print {
+      body { background: #fff !important; color: #000 !important; font-family: Arial, sans-serif; }
+      body::before, .scanlines { display: none !important; }
+      .no-print { display: none !important; }
+      #scoring-section { display: none !important; }
+      .pg-header { border-bottom: 2px solid #ccc; padding: 12px 0; }
+      .hdr-icon { width: 48px; height: 48px; filter: none; }
+      .hdr-title { font-family: Arial, sans-serif; font-size: 14pt; color: #000; text-shadow: none; }
+      .hdr-sub { color: #555; }
+      .back-link { display: none; }
+      .card { background: #fff; border: 1px solid #ccc; box-shadow: none; }
+      .card::before, .cb { display: none; }
+      .sec-title { color: #333; font-family: Arial, sans-serif; font-size: 9pt; }
+      #results { display: block !important; }
+      .results-screen { border: 2px solid #333; box-shadow: none; animation: none; }
+      .res-hdr { background: #f0f0f0 !important; border-bottom: 2px solid #333; }
+      .res-hdr::before { display: none; }
+      .orb { width: 68px; height: 68px; box-shadow: none; border: 2px solid #333; color: #000 !important; background: #f9f9f9 !important; }
+      .orb-n { font-size: 1.4rem; }
+      .rbadge { background: #f0f0f0 !important; color: #000 !important; border-color: #333; }
+      .rank-rec { color: #000; }
+      .tally { background: #f5f5f5; }
+      .titem { background: #fff; border: 1px solid #ccc; }
+      .tcat, .si-lbl { color: #555; }
+      .tnum, .si-val { color: #000; }
+      .tpip { border-color: #999; background: #eee; }
+      .tpip.on { background: #555 !important; border-color: #555 !important; }
+      .disc { border: 1px solid #ccc; background: #fafafa; color: #555; }
+      .disc a { color: #000; text-decoration: underline; }
+      .btn-row { display: none !important; }
+      .res-photo { border: 1px solid #ccc; }
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 640px) {
+      .fg { grid-template-columns: 1fr; }
+      .fg .s2 { grid-column: 1; }
+      .rating-grid { grid-template-columns: 1fr; }
+      .tally { grid-template-columns: 1fr; }
+      .si-grid { grid-template-columns: 1fr; }
+      .res-photo-row { flex-direction: column; }
+      .res-photo { width: 100%; height: 160px; }
+    }
+  </style>
+</head>
+<body>
+<div class="scanlines" aria-hidden="true"></div>
+<div class="wrap">
+
+  <!-- HEADER -->
+  <header class="pg-header">
+    <div class="hdr-inner">
+      <img src="../Enrichment-scoring-tool.png" alt="Enrichment Scoring Tool icon" class="hdr-icon" />
+      <div>
+        <div class="hdr-title">Enrichment<br>Scoring Tool</div>
+        <div class="hdr-sub">WildThink Behavior &amp; Activity Rating</div>
+      </div>
+    </div>
+    <a href="../index.html" class="back-link">&#9664; BACK TO ZOOTILITYBELT</a>
+  </header>
+
+  <!-- SESSION FORM -->
+  <section id="form-section">
+    <div class="card">
+      <span class="cb cb-tl"></span><span class="cb cb-tr"></span>
+      <span class="cb cb-bl"></span><span class="cb cb-br"></span>
+      <h2 class="sec-title">&#128203; Session Info</h2>
+      <div class="fg">
+        <div class="fl">
+          <label for="f-species">Species</label>
+          <input type="text" id="f-species" placeholder="e.g., Sun Bear" />
+        </div>
+        <div class="fl">
+          <label for="f-enclosure">Enclosure</label>
+          <input type="text" id="f-enclosure" placeholder="e.g., Exhibit 4B" />
+        </div>
+        <div class="fl">
+          <label for="f-keeper">Keeper Name</label>
+          <input type="text" id="f-keeper" placeholder="Enter your name" />
+        </div>
+        <div class="fl">
+          <label for="f-date">Date</label>
+          <input type="date" id="f-date" />
+        </div>
+        <div class="fl">
+          <label for="f-time">Start Time</label>
+          <input type="time" id="f-time" />
+        </div>
+        <div class="fl">
+          <label for="f-duration">Duration (minutes)</label>
+          <input type="number" id="f-duration" placeholder="e.g., 30" min="1" />
+        </div>
+        <div class="fl s2">
+          <label for="f-behavior">Target Behavior</label>
+          <input type="text" id="f-behavior" placeholder="Behavior the enrichment was designed to elicit" />
+        </div>
+        <div class="fl s2">
+          <label for="f-device">Enrichment Device Description</label>
+          <textarea id="f-device" rows="3" placeholder="Describe the enrichment item, materials used, setup..."></textarea>
+        </div>
+        <div class="fl">
+          <label for="f-type">Type of Enrichment</label>
+          <select id="f-type">
+            <option value="">&#8212; Select type &#8212;</option>
+            <option value="Cognitive">Cognitive</option>
+            <option value="Sensory">Sensory</option>
+            <option value="Social">Social</option>
+            <option value="Food-based">Food-based</option>
+            <option value="Physical / Structural">Physical / Structural</option>
+            <option value="Occupational">Occupational</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div class="fl">
+          <label>Photo (optional)</label>
+          <div class="upload-zone" id="upload-zone">
+            <input type="file" id="f-photo" accept="image/*" aria-label="Upload session photo" />
+            <div class="upload-icon">&#128247;</div>
+            <div class="upload-lbl">Click or drag photo here</div>
+          </div>
+          <div class="photo-prev" id="photo-prev">
+            <img id="photo-img" src="" alt="Session photo preview" />
+            <button class="rm-photo" id="rm-photo" aria-label="Remove photo" title="Remove photo">&#x2715;</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SCORING SECTION -->
+  <section id="scoring-section" class="no-print">
+    <h2 class="sec-title">&#9876; Category Ratings</h2>
+    <p style="font-family:var(--font-m);font-size:1.05rem;color:var(--muted);margin-bottom:20px;line-height:1.5;">
+      Rate each of the four categories based on your direct observation. Select the option that best matches what you saw.
+    </p>
+
+    <!-- CAT 1: Interest -->
+    <div class="cat-card" id="cc0">
+      <div class="cat-hdr">
+        <div class="cat-ico">&#128065;&#65039;</div>
+        <div class="cat-lbl">CATEGORY 1<br>Interest in Enrichment</div>
+        <div class="cat-badge" id="b0">&#8212; / 3</div>
+      </div>
+      <div class="rating-grid">
+        <div class="ro"><input type="radio" name="c0" id="c0r0" value="0" /><label for="c0r0"><div class="pip p0">0</div><div class="rt"><div class="rt-title">Adverse Reaction</div><div class="rt-desc">Animal is terrified, showing signs of stress toward the item</div></div></label></div>
+        <div class="ro"><input type="radio" name="c0" id="c0r1" value="1" /><label for="c0r1"><div class="pip p1">1</div><div class="rt"><div class="rt-title">Not Engaged</div><div class="rt-desc">Animal shows no interest in enrichment item</div></div></label></div>
+        <div class="ro"><input type="radio" name="c0" id="c0r2" value="2" /><label for="c0r2"><div class="pip p2">2</div><div class="rt"><div class="rt-title">Somewhat Engaged</div><div class="rt-desc">Animal may periodically take interest in item</div></div></label></div>
+        <div class="ro"><input type="radio" name="c0" id="c0r3" value="3" /><label for="c0r3"><div class="pip p3">3</div><div class="rt"><div class="rt-title">Fully Engaged</div><div class="rt-desc">Animal spends majority of time exploring item</div></div></label></div>
+      </div>
+      <div class="xp-row"><span class="xp-lbl">INTEREST XP</span><div class="xp-bar"><div class="xp-fill" id="x0"></div></div></div>
+    </div>
+
+    <!-- CAT 2: Goal Achievement -->
+    <div class="cat-card" id="cc1">
+      <div class="cat-hdr">
+        <div class="cat-ico">&#127919;</div>
+        <div class="cat-lbl">CATEGORY 2<br>Goal Achievement</div>
+        <div class="cat-badge" id="b1">&#8212; / 3</div>
+      </div>
+      <div class="rating-grid">
+        <div class="ro"><input type="radio" name="c1" id="c1r0" value="0" /><label for="c1r0"><div class="pip p0">0</div><div class="rt"><div class="rt-title">Did Not Meet Goal</div><div class="rt-desc">0&#8211;25% of time engaging in target behavior</div></div></label></div>
+        <div class="ro"><input type="radio" name="c1" id="c1r1" value="1" /><label for="c1r1"><div class="pip p1">1</div><div class="rt"><div class="rt-title">Somewhat Achieved</div><div class="rt-desc">25&#8211;50% of time engaging in target behavior</div></div></label></div>
+        <div class="ro"><input type="radio" name="c1" id="c1r2" value="2" /><label for="c1r2"><div class="pip p2">2</div><div class="rt"><div class="rt-title">Met Behavioral Goal</div><div class="rt-desc">50&#8211;75% of time engaging in target behavior</div></div></label></div>
+        <div class="ro"><input type="radio" name="c1" id="c1r3" value="3" /><label for="c1r3"><div class="pip p3">3</div><div class="rt"><div class="rt-title">Exceeded Goal</div><div class="rt-desc">75&#8211;100% of time engaging in target behavior</div></div></label></div>
+      </div>
+      <div class="xp-row"><span class="xp-lbl">GOAL XP</span><div class="xp-bar"><div class="xp-fill" id="x1"></div></div></div>
+    </div>
+
+    <!-- CAT 3: Animal Activity -->
+    <div class="cat-card" id="cc2">
+      <div class="cat-hdr">
+        <div class="cat-ico">&#9889;</div>
+        <div class="cat-lbl">CATEGORY 3<br>Animal Activity</div>
+        <div class="cat-badge" id="b2">&#8212; / 3</div>
+      </div>
+      <div class="rating-grid">
+        <div class="ro"><input type="radio" name="c2" id="c2r0" value="0" /><label for="c2r0"><div class="pip p0">0</div><div class="rt"><div class="rt-title">Very Inactive</div><div class="rt-desc">0&#8211;25% active, 75&#8211;100% resting / sleeping</div></div></label></div>
+        <div class="ro"><input type="radio" name="c2" id="c2r1" value="1" /><label for="c2r1"><div class="pip p1">1</div><div class="rt"><div class="rt-title">Somewhat Inactive</div><div class="rt-desc">25&#8211;50% active, 50&#8211;75% resting / sleeping</div></div></label></div>
+        <div class="ro"><input type="radio" name="c2" id="c2r2" value="2" /><label for="c2r2"><div class="pip p2">2</div><div class="rt"><div class="rt-title">Somewhat Active</div><div class="rt-desc">50&#8211;75% active, 25&#8211;50% resting / sleeping</div></div></label></div>
+        <div class="ro"><input type="radio" name="c2" id="c2r3" value="3" /><label for="c2r3"><div class="pip p3">3</div><div class="rt"><div class="rt-title">Very Active</div><div class="rt-desc">75&#8211;100% active, 0&#8211;25% resting / sleeping</div></div></label></div>
+      </div>
+      <div class="xp-row"><span class="xp-lbl">ACTIVITY XP</span><div class="xp-bar"><div class="xp-fill" id="x2"></div></div></div>
+    </div>
+
+    <!-- CAT 4: Caretaker Effort -->
+    <div class="cat-card" id="cc3">
+      <div class="cat-hdr">
+        <div class="cat-ico">&#128295;</div>
+        <div class="cat-lbl">CATEGORY 4<br>Caretaker Effort</div>
+        <div class="cat-badge" id="b3">&#8212; / 3</div>
+      </div>
+      <div class="rating-grid">
+        <div class="ro"><input type="radio" name="c3" id="c3r0" value="0" /><label for="c3r0"><div class="pip p0">0</div><div class="rt"><div class="rt-title">Very Labor Intensive</div><div class="rt-desc">Extensive effort and time required from caretakers</div></div></label></div>
+        <div class="ro"><input type="radio" name="c3" id="c3r1" value="1" /><label for="c3r1"><div class="pip p1">1</div><div class="rt"><div class="rt-title">Somewhat Labor Intensive</div><div class="rt-desc">Significant but manageable effort</div></div></label></div>
+        <div class="ro"><input type="radio" name="c3" id="c3r2" value="2" /><label for="c3r2"><div class="pip p2">2</div><div class="rt"><div class="rt-title">Relatively Easy</div><div class="rt-desc">Little effort; reasonably easy to create / give</div></div></label></div>
+        <div class="ro"><input type="radio" name="c3" id="c3r3" value="3" /><label for="c3r3"><div class="pip p3">3</div><div class="rt"><div class="rt-title">Very Easy to Execute</div><div class="rt-desc">Very easy for caretakers to create and give</div></div></label></div>
+      </div>
+      <div class="xp-row"><span class="xp-lbl">EFFORT XP</span><div class="xp-bar"><div class="xp-fill" id="x3"></div></div></div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-score" id="btn-score" onclick="calcScore()">&#9654; CALCULATE SCORE</button>
+      <button class="btn btn-reset" onclick="resetAll()">&#8634; RESET ALL</button>
+    </div>
+    <p class="err-msg" id="errmsg">&#9888; Please rate all four categories before scoring.</p>
+  </section>
+
+  <!-- RESULTS -->
+  <section id="results">
+    <h2 class="sec-title">&#127942; Results Screen</h2>
+    <div class="results-screen">
+
+      <!-- Header / orb -->
+      <div class="res-hdr">
+        <div class="final-row">
+          <div class="orb" id="orb">
+            <span class="orb-n" id="orb-n">&#8212;</span>
+            <span class="orb-l">OVERALL</span>
+          </div>
+          <div class="badge-area">
+            <div class="rbadge" id="rbadge">&#8212;</div>
+            <div class="rank-rec" id="rrec">&#8212;</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Photo + session info -->
+      <div class="res-photo-row">
+        <div id="res-photo-con"></div>
+        <div class="si-grid" id="si-grid"></div>
+      </div>
+
+      <!-- Tally -->
+      <div class="tally" id="tally"></div>
+
+      <!-- Buttons -->
+      <div class="btn-row no-print" style="padding:16px;">
+        <button class="btn btn-print" onclick="window.print()">&#128424;&#65039; PRINT RESULT</button>
+        <button class="btn btn-reset" onclick="resetAll()">&#8634; SCORE AGAIN</button>
+      </div>
+    </div>
+
+    <div class="disc">
+      <strong>Attribution &amp; Disclaimer:</strong>
+      The scoring framework used in this tool is adapted from
+      <a href="https://www.wildthink.org/how-to-evaluate-enrichment" target="_blank" rel="noopener">
+        WildThink.org's "Option 2: Behavior &amp; Activity Rating"
+      </a>
+      method for evaluating enrichment.
+      WildThink is not affiliated with this tool or ZootilityBelt.
+      This tool is intended as a field-use aid only; always apply professional judgment when assessing enrichment outcomes.
+    </div>
+  </section>
+
+  <!-- Always-visible disclaimer -->
+  <div class="disc no-print" style="margin-top:24px;">
+    <strong>Attribution:</strong> Scoring adapted from
+    <a href="https://www.wildthink.org/how-to-evaluate-enrichment" target="_blank" rel="noopener">
+      WildThink.org — Option 2: Behavior &amp; Activity Rating
+    </a>.
+    WildThink is not affiliated with this tool.
+  </div>
+
+</div><!-- /wrap -->
+
+<!-- Hidden sun bear SVG template -->
+<svg id="sb-tpl" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" style="display:none;" aria-hidden="true">
+  <ellipse cx="100" cy="130" rx="52" ry="48" fill="#2a2020"/>
+  <ellipse cx="100" cy="75" rx="38" ry="34" fill="#2a2020"/>
+  <ellipse cx="68" cy="47" rx="14" ry="12" fill="#2a2020"/>
+  <ellipse cx="132" cy="47" rx="14" ry="12" fill="#2a2020"/>
+  <ellipse cx="68" cy="47" rx="8" ry="7" fill="#3a2828"/>
+  <ellipse cx="132" cy="47" rx="8" ry="7" fill="#3a2828"/>
+  <ellipse cx="100" cy="88" rx="18" ry="13" fill="#b08060"/>
+  <path d="M85,108 Q100,100 115,108 Q118,122 100,127 Q82,122 85,108Z" fill="#d4a060"/>
+  <circle cx="88" cy="70" r="5" fill="#fff"/>
+  <circle cx="112" cy="70" r="5" fill="#fff"/>
+  <circle cx="89" cy="71" r="3" fill="#111"/>
+  <circle cx="113" cy="71" r="3" fill="#111"/>
+  <ellipse cx="100" cy="84" rx="5" ry="4" fill="#111"/>
+  <ellipse cx="70" cy="168" rx="16" ry="10" fill="#2a2020"/>
+  <ellipse cx="130" cy="168" rx="16" ry="10" fill="#2a2020"/>
+  <rect x="60" y="158" width="4" height="4" fill="#444"/>
+  <rect x="68" y="160" width="4" height="4" fill="#444"/>
+  <rect x="76" y="158" width="4" height="4" fill="#444"/>
+  <rect x="120" y="158" width="4" height="4" fill="#444"/>
+  <rect x="128" y="160" width="4" height="4" fill="#444"/>
+  <rect x="136" y="158" width="4" height="4" fill="#444"/>
+</svg>
+
+<script>
+(function(){
+  'use strict';
+
+  /* --- Photo upload --- */
+  var photoData = null;
+  var photoInput = document.getElementById('f-photo');
+  var photoPrev  = document.getElementById('photo-prev');
+  var photoImg   = document.getElementById('photo-img');
+  var rmBtn      = document.getElementById('rm-photo');
+  var zone       = document.getElementById('upload-zone');
+
+  photoInput.addEventListener('change', function(){
+    var f = this.files[0]; if(!f) return;
+    var r = new FileReader();
+    r.onload = function(e){
+      photoData = e.target.result;
+      photoImg.src = photoData;
+      photoPrev.style.display = 'block';
+      zone.style.display = 'none';
+    };
+    r.readAsDataURL(f);
+  });
+
+  rmBtn.addEventListener('click', function(){
+    photoData = null; photoInput.value = '';
+    photoImg.src = ''; photoPrev.style.display = 'none';
+    zone.style.display = 'block';
+  });
+
+  zone.addEventListener('dragover', function(e){ e.preventDefault(); this.classList.add('drag-over'); });
+  zone.addEventListener('dragleave', function(){ this.classList.remove('drag-over'); });
+  zone.addEventListener('drop', function(e){
+    e.preventDefault(); this.classList.remove('drag-over');
+    var f = e.dataTransfer.files[0];
+    if(f && f.type.startsWith('image/')){
+      photoInput.files = e.dataTransfer.files;
+      photoInput.dispatchEvent(new Event('change'));
+    }
+  });
+
+  /* --- XP bars on radio change --- */
+  var CATS = ['c0','c1','c2','c3'];
+  CATS.forEach(function(name, idx){
+    document.querySelectorAll('input[name="'+name+'"]').forEach(function(r){
+      r.addEventListener('change', function(){
+        var v = parseInt(this.value);
+        var fill = document.getElementById('x'+idx);
+        fill.style.width = (v/3*100)+'%';
+        fill.className = 'xp-fill xf'+v;
+        document.getElementById('cc'+idx).classList.add('scored');
+        document.getElementById('b'+idx).textContent = v+' / 3';
+      });
+    });
+  });
+
+  /* --- Rank config --- */
+  var RANKS = [
+    { badge:'&#x2715;  RANK 0 — AVOID',         rec:'Do not use this enrichment. It may be causing stress or is unsuitable for this animal.' },
+    { badge:'&#9650;  RANK 1 — EVALUATE',        rec:'Needs further evaluation. Modify and observe again before adding to rotation.' },
+    { badge:'&#9733;  RANK 2 — ADJUST',          rec:'Add to rotation with adjustment. Make improvements and monitor the ongoing response.' },
+    { badge:'&#127942;  RANK 3 — ADD TO ROTATION', rec:'Excellent! Add directly to the enrichment rotation for this animal.' }
+  ];
+  var CINFO = [
+    {ico:'&#128065;&#65039;', name:'Interest in Enrichment'},
+    {ico:'&#127919;',         name:'Goal Achievement'},
+    {ico:'&#9889;',           name:'Animal Activity'},
+    {ico:'&#128295;',         name:'Caretaker Effort'}
+  ];
+  var RCLR  = ['var(--red)','var(--orange)','var(--blue)','var(--green)'];
+
+  /* --- Calculate --- */
+  window.calcScore = function(){
+    var scores = []; var ok = true;
+    CATS.forEach(function(name){
+      var ch = document.querySelector('input[name="'+name+'"]:checked');
+      if(ch){ scores.push(parseInt(ch.value)); } else { ok=false; }
+    });
+    var err = document.getElementById('errmsg');
+    if(!ok){ err.classList.add('show'); return; }
+    err.classList.remove('show');
+    var avg   = scores.reduce(function(a,b){return a+b;},0)/scores.length;
+    var final = Math.round(avg);
+    renderResults(scores, final);
+  };
+
+  function g(id){ return document.getElementById(id); }
+  function v(id){ var el=g(id); return el?el.value.trim():''; }
+
+  function renderResults(scores, final){
+    /* Orb */
+    var orb = g('orb');
+    orb.className = 'orb rk'+final;
+    g('orb-n').textContent = final;
+
+    /* Badge */
+    var badge = g('rbadge');
+    badge.innerHTML = RANKS[final].badge;
+    badge.className = 'rbadge rk'+final;
+    g('rrec').textContent = RANKS[final].rec;
+
+    /* Photo or sun bear */
+    var con = g('res-photo-con');
+    if(photoData){
+      con.innerHTML = '<img class="res-photo" src="'+photoData+'" alt="Session photo" />';
+    } else {
+      var tpl = g('sb-tpl').cloneNode(true);
+      tpl.removeAttribute('id'); tpl.style.display='';
+      tpl.style.width='140px'; tpl.style.height='110px';
+      tpl.style.border='2px solid var(--border)';
+      tpl.style.borderRadius='8px';
+      tpl.style.background='var(--surf2)';
+      tpl.style.padding='8px';
+      tpl.setAttribute('aria-label','Sun bear silhouette placeholder');
+      con.innerHTML=''; con.appendChild(tpl);
+    }
+
+    /* Session info */
+    var sig = g('si-grid');
+    var fields = [
+      {l:'Species',  val:v('f-species')},
+      {l:'Enclosure',val:v('f-enclosure')},
+      {l:'Keeper',   val:v('f-keeper')},
+      {l:'Date',     val:v('f-date')},
+      {l:'Start Time',val:v('f-time')},
+      {l:'Duration', val:v('f-duration')?(v('f-duration')+' min'):''},
+      {l:'Target Behavior',val:v('f-behavior')},
+      {l:'Type',     val:g('f-type').value}
+    ];
+    sig.innerHTML = fields.map(function(f){
+      return '<div class="si-row"><span class="si-lbl">'+f.l+'</span><span class="si-val">'+(f.val||'&#8212;')+'</span></div>';
+    }).join('');
+    var dev = v('f-device');
+    if(dev){
+      sig.innerHTML += '<div class="si-row" style="grid-column:1/-1"><span class="si-lbl">Enrichment Device</span><span class="si-val" style="white-space:pre-wrap;">'+dev+'</span></div>';
+    }
+
+    /* Score tally */
+    var tal = g('tally');
+    tal.innerHTML = scores.map(function(s,i){
+      var pips='';
+      for(var p=0;p<3;p++){
+        pips+='<div class="tpip'+(p<s?' on':'')+'" style="color:'+RCLR[s]+'"></div>';
+      }
+      return '<div class="titem"><div class="tico">'+CINFO[i].ico+'</div><div class="tcon"><div class="tcat">'+CINFO[i].name+'</div><div class="tsbar"><div class="tpips">'+pips+'</div><span class="tnum" style="color:'+RCLR[s]+'">'+s+' / 3</span></div></div></div>';
+    }).join('');
+
+    /* Show */
+    var res = g('results');
+    res.classList.add('on');
+    res.scrollIntoView({behavior:'smooth',block:'start'});
+  }
+
+  /* --- Reset --- */
+  window.resetAll = function(){
+    ['f-species','f-enclosure','f-keeper','f-date','f-time','f-duration','f-behavior','f-device'].forEach(function(id){ g(id).value=''; });
+    g('f-type').value='';
+    photoData=null; photoInput.value=''; photoImg.src='';
+    photoPrev.style.display='none'; zone.style.display='block';
+    CATS.forEach(function(name,idx){
+      document.querySelectorAll('input[name="'+name+'"]').forEach(function(r){r.checked=false;});
+      g('cc'+idx).classList.remove('scored');
+      g('b'+idx).textContent='&#8212; / 3';
+      var f=g('x'+idx); f.style.width='0%'; f.className='xp-fill';
+    });
+    g('results').classList.remove('on');
+    g('errmsg').classList.remove('show');
+    window.scrollTo({top:0,behavior:'smooth'});
+    /* Re-set date/time defaults */
+    var now=new Date();
+    g('f-date').value=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0');
+    g('f-time').value=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
+  };
+
+  /* --- Default date/time --- */
+  (function(){
+    var now=new Date();
+    g('f-date').value=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0');
+    g('f-time').value=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
+  }());
+
+}());
+</script>
+</body>
+</html>
